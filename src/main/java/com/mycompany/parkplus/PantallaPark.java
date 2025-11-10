@@ -4,7 +4,7 @@
  */
 package com.mycompany.parkplus;
 
-import Ventanas.Usuario;
+import Ventanas.UsuarioInterfaz;
 
 /**
  *
@@ -205,7 +205,7 @@ public class PantallaPark extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void UsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UsuarioActionPerformed
-     Usuario a = new Usuario(this, true);
+     UsuarioInterfaz a = new UsuarioInterfaz(this, true);
      a.setVisible(true);
     }//GEN-LAST:event_UsuarioActionPerformed
 

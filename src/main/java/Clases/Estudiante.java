@@ -1,4 +1,4 @@
-package com.mycompany.parkplus;
+package Clases;
 
 public class Estudiante extends Usuario{
     private String carrera;

@@ -1,4 +1,4 @@
-package com.mycompany.parkplus;
+package Clases;
 
 public class Docente extends Usuario{
 

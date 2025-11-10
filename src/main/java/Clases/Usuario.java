@@ -1,4 +1,4 @@
-package com.mycompany.parkplus;
+package Clases;
 
 public class Usuario {
    private String idusuario;
@@ -7,6 +7,7 @@ public class Usuario {
    private String nombre;
    private String apellido;
    private String tipousuario;
+   private Vehiculo vehiculo;
 
     public Usuario(String idusuario, String carnet, int telefono, String nombre, String apellido, String tipousuario) {
         this.idusuario = idusuario;
@@ -64,8 +65,12 @@ public class Usuario {
     public void setTipoUsuario(String tipousuario){
         this.tipousuario = tipousuario;
     }
-    
-    public void CargarCsv(){
-    
-    } 
+
+    public Vehiculo getVehiculo() {
+        return vehiculo;
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
+    }
 }
