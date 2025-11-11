@@ -4,7 +4,7 @@ public class Estudiante extends Usuario{
     private String carrera;
     private String semestre;
 
-    public Estudiante(String idusuario, String carnet, int telefono, String nombre, String apellido, String tipousuario, String carrera, String semestre) {
+    public Estudiante(String idusuario, String carnet, String telefono, String nombre, String apellido, String tipousuario, String carrera, String semestre) {
         super(idusuario, carnet, telefono, nombre, apellido, tipousuario); 
         this.carrera = carrera;
         this.semestre = semestre;

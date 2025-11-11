@@ -3,13 +3,13 @@ package Clases;
 public class Usuario {
    private String idusuario;
    private String carnet;
-   private int telefono;
+   private String telefono;
    private String nombre;
    private String apellido;
    private String tipousuario;
    private Vehiculo vehiculo;
 
-    public Usuario(String idusuario, String carnet, int telefono, String nombre, String apellido, String tipousuario) {
+    public Usuario(String idusuario, String carnet, String telefono, String nombre, String apellido, String tipousuario) {
         this.idusuario = idusuario;
         this.carnet = carnet;
         this.telefono = telefono;
@@ -34,11 +34,11 @@ public class Usuario {
         this.carnet = carnet;
     }
 
-    public int getTelefono() {
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(int telefono) {
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 

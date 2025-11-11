@@ -1,14 +1,28 @@
 package Clases;
 
 public class Vehiculo {
+    String idvehiculo;
     String placa;
     String color;
     String tipovehiculo;
+    String rol;
+    String idusuario;
 
-    public Vehiculo(String placa, String color, String tipovehiculo) {
+    public Vehiculo(String idvehiculo, String placa, String color, String tipovehiculo, String rol, String idusuario) {
+        this.idvehiculo = idvehiculo;
         this.placa = placa;
         this.color = color;
         this.tipovehiculo = tipovehiculo;
+        this.rol = rol;
+        this.idusuario = idusuario;
+    }
+
+    public String getIdvehiculo() {
+        return idvehiculo;
+    }
+
+    public void setIdvehiculo(String idvehiculo) {
+        this.idvehiculo = idvehiculo;
     }
 
     public String getPlaca() {
@@ -34,4 +48,22 @@ public class Vehiculo {
     public void setTipovehiculo(String tipovehiculo) {
         this.tipovehiculo = tipovehiculo;
     }
+
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public String getIdusuario() {
+        return idusuario;
+    }
+
+    public void setIdusuario(String idusuario) {
+        this.idusuario = idusuario;
+    }
+    
+    
 }
