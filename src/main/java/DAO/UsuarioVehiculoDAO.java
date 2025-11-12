@@ -39,7 +39,7 @@ public class UsuarioVehiculoDAO {
     }
     
     public boolean asociarUsuarioVehiculos(int idUsuario, ArrayList<Vehiculo> vehiculos, ArrayList<Integer> idsVehiculos) {
-    String sql = "INSERT INTO usuario_vehiculo (id_usuario, id_vehiculo, rol) VALUES (?, ?, ?)";
+    String sql = "INSERT INTO usuario_vehiculo (idUsuario, idVehiculo, rol) VALUES (?, ?, ?)";
 
     try (Connection conn = Conexion.Conectar()) {
         for (int i = 0; i < vehiculos.size(); i++) {

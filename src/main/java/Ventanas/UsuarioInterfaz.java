@@ -499,7 +499,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         tipovehiculo = "Moto";
         vehiculo.add(new Moto(0, placa, color, tipovehiculo, rol));
       
-        if (daoV.existeVehiculo(placa)) {
+        if (!daoV.existeVehiculo(placa)) {
         vehiculos.add(new Moto(0, placa, color, tipovehiculo, rol));
         }
         
@@ -508,15 +508,17 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         tipovehiculo = "Carro";
         vehiculo.add(new Carro(0, placa, color, tipovehiculo, rol));
         
-            if (daoV.existeVehiculo(placa)) {
+            if (!daoV.existeVehiculo(placa)) {
             vehiculos.add(new Carro(0, placa, color, tipovehiculo, rol));
             }
         }
+        
         gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
-        gestion.agregarVehiculo(tablaVehiculos, vehiculo);
+        gestion.agregarVehiculo(tablaVehiculos, vehiculo); 
+        
         vehiculoMinimo = true;
     }//GEN-LAST:event_btnAgregarvActionPerformed
-
+    
     private boolean validarCamposv(){
         if (txtPlaca.getText().trim().isEmpty()){
            return false; 
@@ -592,7 +594,9 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         
         daoU.insertar(usuarioActual);
         int idU = daoU.obtenerId(usuarioActual.getCarnet());
-        daoV.insertar(vehiculos);
+        if (vehiculos.size()>=1) {
+            daoV.insertar(vehiculos);
+        }
         idsV = daoV.obtenerIdsv(vehiculo);
         daoUV.asociarUsuarioVehiculos(idU, vehiculo , idsV);
         
