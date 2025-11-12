@@ -4,24 +4,14 @@
  */
 package Ventanas;
 
-import Clases.Docente;
-import Clases.Estudiante;
-import Clases.Usuario;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import Clases.Gestion;
 
 /**
  *
  * @author dcuyu
  */
 public class CargaInterfaz extends javax.swing.JDialog {
-    ArrayList<Usuario> cargaUsuarios = new ArrayList<>();
-    
+    Gestion gestion = new Gestion();  
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CargaInterfaz.class.getName());
 
     /**
@@ -53,7 +43,7 @@ public class CargaInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ID", "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
+                "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
             }
         ));
         jScrollPane1.setViewportView(tablaCarga);
@@ -103,65 +93,8 @@ public class CargaInterfaz extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
-        javax.swing.table.DefaultTableModel datos = (javax.swing.table.DefaultTableModel) tablaCarga.getModel();
-        JFileChooser fileChooser = new JFileChooser();
-        int resultado = fileChooser.showOpenDialog(this);
-        String idusuario, carnet, telefono, nombre, apellido, tipousuario, carrera, semestre;
-        
-        if (resultado == JFileChooser.APPROVE_OPTION) {
-            File archivo = fileChooser.getSelectedFile();
-
-            try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-                String linea;
-                while ((linea = br.readLine()) != null) {
-                    String[] partes = linea.split("\\|");
-                    if (partes.length == 8) {
-                        idusuario = partes[0].trim();
-                        carnet = partes[1].trim();
-                        telefono = partes[2].trim();
-                        nombre = partes[3].trim();
-                        apellido = partes[4].trim();
-                        tipousuario = partes[5].trim();
-                        carrera = partes[6].trim();
-                        semestre = partes[7].trim();
-                        cargaUsuarios.add(new Estudiante(idusuario, carnet, telefono, nombre, apellido, tipousuario, carrera, semestre));
-                    } else if (partes.length == 6) {
-                        idusuario = partes[0].trim();
-                        carnet = partes[1].trim();
-                        telefono = partes[2].trim();       
-                        nombre = partes[3].trim();
-                        apellido = partes[4].trim();
-                        tipousuario = partes[5].trim();
-                        cargaUsuarios.add(new Docente(idusuario, carnet, telefono, nombre, apellido, tipousuario));
-                    }
-                }
-                JOptionPane.showMessageDialog(this, 
-                    "Archivo cargado correctamente con " + cargaUsuarios.size() + " usuarios.");
-
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(this, "Error al leer el archivo: " + e.getMessage());
-            }
-        } 
-        datos.setRowCount(0);
-        for (Usuario u : cargaUsuarios) {
-            if (u instanceof Estudiante) {
-                Estudiante e = (Estudiante) u;
-                Object[] fila = {
-                    e.getIdusuario(), e.getCarnet(), e.getTelefono(),
-                    e.getNombre(), e.getApellido(), "Estudiante",
-                    e.getCarrera(), e.getSemestre()
-                };
-                datos.addRow(fila);
-            } else if (u instanceof Docente) {
-                Docente d = (Docente) u;
-                Object[] fila = {
-                    d.getIdusuario(), d.getCarnet(), d.getTelefono(),
-                    d.getNombre(), d.getApellido(), "Docente", "-", "-"
-                };
-                datos.addRow(fila);
-            }
-        }
-        tablaCarga.setModel(datos); 
+      gestion.cargarArchivo(this);
+      gestion.agregarCarga(tablaCarga);
     }//GEN-LAST:event_btnCargarActionPerformed
 
     /**

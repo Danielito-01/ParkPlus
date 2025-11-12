@@ -1,6 +1,6 @@
 package com.mycompany.parkplus;
 
-import Clases.Conexion;
+import DAO.Conexion;
 import java.sql.Connection;
 
 public class ParkPlus {

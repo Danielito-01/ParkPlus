@@ -4,11 +4,13 @@ public class Estudiante extends Usuario{
     private String carrera;
     private String semestre;
 
-    public Estudiante(String idusuario, String carnet, String telefono, String nombre, String apellido, String tipousuario, String carrera, String semestre) {
-        super(idusuario, carnet, telefono, nombre, apellido, tipousuario); 
+    public Estudiante(){}
+    
+    public Estudiante(int id, String carnet, String telefono, String nombre, String apellido, String tipousuario, String carrera, String semestre) {
+        super(id, carnet, telefono, nombre, apellido, tipousuario);
         this.carrera = carrera;
         this.semestre = semestre;
-    }
+    }    
 
     public String getCarrera() {
         return carrera;
@@ -24,5 +26,5 @@ public class Estudiante extends Usuario{
 
     public void setSemestre(String semestre) {
         this.semestre = semestre;
-    }   
+    }
 }

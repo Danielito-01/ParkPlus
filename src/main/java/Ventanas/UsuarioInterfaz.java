@@ -11,7 +11,11 @@ import Clases.Estudiante;
 import Clases.Gestion;
 import Clases.Moto;
 import Clases.Usuario;
+import Clases.UsuarioVehiculo;
 import Clases.Vehiculo;
+import DAO.UsuarioDAO;
+import DAO.UsuarioVehiculoDAO;
+import DAO.VehiculoDAO;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 /**
@@ -20,9 +24,16 @@ import javax.swing.JOptionPane;
  */
 public class UsuarioInterfaz extends javax.swing.JDialog {    
     private Usuario usuarioActual = null;
-    private boolean usuarioPendiente = false;
-    Gestion gestion = new Gestion();
     ArrayList<Vehiculo> vehiculo = new ArrayList<>();
+    ArrayList<UsuarioVehiculo> uv = new ArrayList<>();
+    ArrayList<Vehiculo> vehiculos = new ArrayList<>();
+    private boolean usuarioPendiente = false;
+    private boolean vehiculoMinimo = false;
+    Gestion gestion = new Gestion();
+    UsuarioDAO daoU = new UsuarioDAO();
+    VehiculoDAO daoV = new VehiculoDAO();
+    UsuarioVehiculoDAO daoUV = new UsuarioVehiculoDAO();
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(UsuarioInterfaz.class.getName());
     /**
      * Creates new form Usuario
@@ -61,14 +72,10 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         btnAgregaru = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsuarios = new javax.swing.JTable();
-        jLabel10 = new javax.swing.JLabel();
-        txtIdu = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         btnLimpiaru = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
-        txtIdv = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         txtPlaca = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
@@ -80,7 +87,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         btnLimpiarv = new javax.swing.JButton();
         rbtnMoto = new javax.swing.JRadioButton();
         rbtnCarro = new javax.swing.JRadioButton();
-        jButton1 = new javax.swing.JButton();
+        btnGuardar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 0, 102));
@@ -138,18 +145,10 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ID", "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
+                "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
             }
         ));
         jScrollPane1.setViewportView(tablaUsuarios);
-
-        jLabel10.setText("ID:");
-
-        txtIdu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtIduActionPerformed(evt);
-            }
-        });
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setText("Usuario");
@@ -192,24 +191,17 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
                                             .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                             .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE))
-                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(jPanel1Layout.createSequentialGroup()
-                                            .addComponent(txtIdu, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(34, 34, 34)
-                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(btnAgregaru, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
+                                        .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                             .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(86, 86, 86)
+                                            .addGap(41, 41, 41)
                                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                            .addComponent(btnAgregaru, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                .addComponent(txtNombre, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 704, Short.MAX_VALUE)
-                                                .addComponent(txtApellido, javax.swing.GroupLayout.Alignment.LEADING)))))))))
+                                            .addGap(18, 18, 18)
+                                            .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
                 .addGap(9, 9, 9))
         );
         jPanel1Layout.setVerticalGroup(
@@ -219,11 +211,9 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
                     .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jLabel10)
-                    .addComponent(txtIdu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
                     .addComponent(txtTelefono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -254,8 +244,6 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("Vehiculos");
-
-        jLabel12.setText("ID:");
 
         jLabel9.setText("Placa:");
 
@@ -292,7 +280,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "ID", "Placa", "Color", "Vehiculo", "Usuario", "Rol"
+                "Placa", "Color", "Vehiculo", "Rol"
             }
         ));
         jScrollPane2.setViewportView(tablaVehiculos);
@@ -320,33 +308,26 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
                     .addComponent(btnLimpiarv, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtIdv, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(69, 69, 69)))
+                                .addGap(6, 6, 6)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addGap(46, 46, 46)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(37, 37, 37)
                                 .addComponent(btnAgregarv, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(28, 28, 28)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                                 .addComponent(rbtnMoto, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbtnCarro, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(140, 140, 140))))
+                                .addComponent(rbtnCarro, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 777, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
@@ -354,21 +335,19 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel7)
-                        .addComponent(rbtnCarro)
-                        .addComponent(rbtnMoto))
-                    .addComponent(txtRol, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(rbtnCarro)
+                    .addComponent(rbtnMoto))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAgregarv)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12)
-                    .addComponent(txtIdv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel9)
+                        .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel11)
+                        .addComponent(txtColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -376,10 +355,10 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Guardar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnGuardar.setText("Guardar");
+        btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnGuardarActionPerformed(evt);
             }
         });
 
@@ -391,7 +370,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(348, 348, 348)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnGuardar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -401,7 +380,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
+                .addComponent(btnGuardar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -417,40 +396,48 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     }//GEN-LAST:event_rbtnDocenteActionPerformed
 
     private void btnAgregaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregaruActionPerformed
-    String idusuario = txtIdu.getText();
-    String carnet = txtCarnet.getText();
-    String telefono = txtTelefono.getText();
-    String nombre = txtNombre.getText();
-    String apellido = txtApellido.getText();
-    String tipousuario;
-    String carrera = txtCarrera.getSelectedItem().toString();
-    String semestre = txtSemestre.getSelectedItem().toString();   
-             
-        if (usuarioPendiente) {
-            JOptionPane.showMessageDialog(this, "Guarde los datos ingresados para agregar un nuevo usuario.");
-            return;
-        }
+        String carnet = txtCarnet.getText();
         
         if(!validarCamposu()){
             JOptionPane.showMessageDialog(this, "Por favor llene todos los campos.");
             return;
         }
         
+        if (daoU.existeCarnet(carnet)) {
+            JOptionPane.showMessageDialog(null, 
+                "Error: El carnet " + carnet + " ya esta registrado en el sistema.", 
+                "Carnet Duplicado", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if (usuarioPendiente) {
+            JOptionPane.showMessageDialog(this, "Guarde los datos ingresados para agregar un nuevo usuario.");
+            return;
+        }
+        
+        String telefono = txtTelefono.getText();
+        String nombre = txtNombre.getText();
+        String apellido = txtApellido.getText();
+        String tipousuario;
+        String carrera = txtCarrera.getSelectedItem().toString();
+        String semestre = txtSemestre.getSelectedItem().toString();   
+        
         if (rbtnEstudiante.isSelected()) {
         tipousuario = "Estudiante";
-        usuarioActual = new Estudiante(idusuario, carnet, telefono, nombre, apellido, tipousuario, carrera, semestre);
+        usuarioActual = new Estudiante(0, carnet, telefono, nombre, apellido, tipousuario, carrera, semestre);
         } else if (rbtnDocente.isSelected()) {
         tipousuario = "Docente";
-        usuarioActual = new Docente(idusuario, carnet, telefono, nombre, apellido, tipousuario);  
+        usuarioActual = new Docente(0, carnet, telefono, nombre, apellido, tipousuario);  
         }
+        
         usuarioPendiente = true;
         gestion.agregarUsuario(tablaUsuarios, usuarioActual);
+        
     }//GEN-LAST:event_btnAgregaruActionPerformed
     
     private boolean validarCamposu(){
-        if (txtIdu.getText().trim().isEmpty()){
-          return false;  
-        } 
+       
         if (txtCarnet.getText().trim().isEmpty()){
            return false; 
         } 
@@ -475,40 +462,62 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     return true;
     }
     
-    private void txtIduActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIduActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtIduActionPerformed
-
     private void btnAgregarvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarvActionPerformed
-    String idvehiculo = txtIdv.getText();
-    String placa = txtPlaca.getText();
-    String color = txtColor.getText();
-    String tipovehiculo;
-    String rol = txtRol.getSelectedItem().toString();
-    String idusuario = txtIdu.getText();
+        String placa = txtPlaca.getText();
+        String rol = txtRol.getSelectedItem().toString();
+        
+        if(!usuarioPendiente){
+            JOptionPane.showMessageDialog(this, "Agregue un usuario para asignarle vehiculos.");
+            return;
+        }
         
         if (!validarCamposv()) {
         JOptionPane.showMessageDialog(this, "Por favor llene todos los campos.");
         return;    
         }
         
+        if (rol.equalsIgnoreCase("Propietario")) {
+            if (daoUV.tienePropietario(placa)) {
+                JOptionPane.showMessageDialog(this, "Este vehiculo ya tien un propietario registrado.");
+                return;
+            }
+        }
+        
+        String color = txtColor.getText();
+        String tipovehiculo;
+        
+        if (gestion.yaExisteVenLista(this.vehiculo, placa)) {
+        JOptionPane.showMessageDialog(null, 
+        "Error: La placa " + placa + " ya tiene un rol para este usuario.", 
+        "Validación", 
+        JOptionPane.ERROR_MESSAGE);
+    
+        return;
+        }
+        
         if (rbtnMoto.isSelected()) {
         tipovehiculo = "Moto";
-        vehiculo.add(new Moto(idvehiculo, placa, color, tipovehiculo, rol, idusuario));
+        vehiculo.add(new Moto(0, placa, color, tipovehiculo, rol));
+      
+        if (daoV.existeVehiculo(placa)) {
+        vehiculos.add(new Moto(0, placa, color, tipovehiculo, rol));
+        }
+        
         }
         if (rbtnCarro.isSelected()) {
         tipovehiculo = "Carro";
-        vehiculo.add(new Carro(idvehiculo, placa, color, tipovehiculo, rol, idusuario));
-        }
+        vehiculo.add(new Carro(0, placa, color, tipovehiculo, rol));
         
+            if (daoV.existeVehiculo(placa)) {
+            vehiculos.add(new Carro(0, placa, color, tipovehiculo, rol));
+            }
+        }
+        gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
         gestion.agregarVehiculo(tablaVehiculos, vehiculo);
-    
+        vehiculoMinimo = true;
     }//GEN-LAST:event_btnAgregarvActionPerformed
 
     private boolean validarCamposv(){
-        if (txtIdv.getText().trim().isEmpty()){
-          return false;  
-        } 
         if (txtPlaca.getText().trim().isEmpty()){
            return false; 
         } 
@@ -555,25 +564,47 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     }//GEN-LAST:event_txtPlacaKeyTyped
 
     private void btnLimpiaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiaruActionPerformed
-        usuarioPendiente = false;   
-        gestion.limpiarUsuario(this, tablaUsuarios, txtIdu, txtCarnet, txtTelefono, txtNombre, txtApellido, txtCarrera, txtSemestre,
-                tipoUsuario, txtPlaca, txtColor, txtRol, tipoVehiculo);
+        usuarioPendiente = false;
+        vehiculoMinimo = false;   
+        gestion.limpiarUsuario(this, tablaUsuarios, txtCarnet, txtTelefono, txtNombre, txtApellido, txtCarrera, txtSemestre,
+                tipoUsuario);
+        gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
+        vehiculo.clear();
     }//GEN-LAST:event_btnLimpiaruActionPerformed
 
     private void btnLimpiarvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarvActionPerformed
-        txtIdu.setText(""); txtPlaca.setText(""); txtColor.setText(""); txtRol.setSelectedIndex(0);
+        vehiculoMinimo = false;
+        gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
+        vehiculo.clear();
     }//GEN-LAST:event_btnLimpiarvActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
+        ArrayList<Integer> idsV = new ArrayList<>();
         if (!usuarioPendiente) {
            JOptionPane.showMessageDialog(this, "No hay datos pendientes de guardar.");
            return;
         }
-        gestion.limpiarUsuario(this, tablaUsuarios, txtIdu, txtCarnet, txtTelefono, txtNombre, txtApellido, txtCarrera, txtSemestre,
-                tipoUsuario, txtPlaca, txtColor, txtRol, tipoVehiculo);
+        
+        if (!vehiculoMinimo) {
+            JOptionPane.showMessageDialog(this, "Por favor ingrese al menos un vehiculo");
+            return;
+        }
+        
+        daoU.insertar(usuarioActual);
+        int idU = daoU.obtenerId(usuarioActual.getCarnet());
+        daoV.insertar(vehiculos);
+        idsV = daoV.obtenerIdsv(vehiculo);
+        daoUV.asociarUsuarioVehiculos(idU, vehiculo , idsV);
+        
+        
+        
+        gestion.limpiarUsuario(this, tablaUsuarios, txtCarnet, txtTelefono, txtNombre, txtApellido, txtCarrera, txtSemestre, tipoUsuario);
+        gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
         usuarioPendiente = false;
+        vehiculoMinimo = false;
+        vehiculo.clear();
         JOptionPane.showMessageDialog(this, "Datos guardados correctamente.");
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -615,13 +646,11 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregaru;
     private javax.swing.JButton btnAgregarv;
+    private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnLimpiaru;
     private javax.swing.JButton btnLimpiarv;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -646,8 +675,6 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     private javax.swing.JTextField txtCarnet;
     private javax.swing.JComboBox<String> txtCarrera;
     private javax.swing.JTextField txtColor;
-    private javax.swing.JTextField txtIdu;
-    private javax.swing.JTextField txtIdv;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPlaca;
     private javax.swing.JComboBox<String> txtRol;

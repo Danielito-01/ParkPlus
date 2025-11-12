@@ -1,28 +1,32 @@
 package Clases;
 
-public class Vehiculo {
-    String idvehiculo;
-    String placa;
-    String color;
-    String tipovehiculo;
-    String rol;
-    String idusuario;
+import java.util.ArrayList;
+import java.util.List;
 
-    public Vehiculo(String idvehiculo, String placa, String color, String tipovehiculo, String rol, String idusuario) {
-        this.idvehiculo = idvehiculo;
+public class Vehiculo {
+    private int id;
+    private String placa;
+    private String color;
+    private String tipovehiculo;
+    private String rol;
+    private List<UsuarioVehiculo> usuarios = new ArrayList<>();
+    
+    public Vehiculo(){}
+    
+    public Vehiculo(int id, String placa, String color, String tipovehiculo, String rol) {
+        this.id = id;
         this.placa = placa;
         this.color = color;
         this.tipovehiculo = tipovehiculo;
         this.rol = rol;
-        this.idusuario = idusuario;
     }
 
-    public String getIdvehiculo() {
-        return idvehiculo;
+    public int getId() {
+        return id;
     }
 
-    public void setIdvehiculo(String idvehiculo) {
-        this.idvehiculo = idvehiculo;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPlaca() {
@@ -49,6 +53,14 @@ public class Vehiculo {
         this.tipovehiculo = tipovehiculo;
     }
 
+    public List<UsuarioVehiculo> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<UsuarioVehiculo> usuarios) {
+        this.usuarios = usuarios;
+    }
+
     public String getRol() {
         return rol;
     }
@@ -56,14 +68,4 @@ public class Vehiculo {
     public void setRol(String rol) {
         this.rol = rol;
     }
-
-    public String getIdusuario() {
-        return idusuario;
-    }
-
-    public void setIdusuario(String idusuario) {
-        this.idusuario = idusuario;
-    }
-    
-    
 }

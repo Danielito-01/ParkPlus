@@ -1,4 +1,4 @@
-package Clases;
+package DAO;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,7 +13,6 @@ public class Conexion {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url, usuario, contra);
-            System.out.println("Conexion establecida con la base de datos");
         } catch (SQLException e) {
             System.out.println("Error en la conexion: " + e.getMessage());
         }

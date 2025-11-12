@@ -1,16 +1,21 @@
 package Clases;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Usuario {
-   private String idusuario;
+   private int id;
    private String carnet;
    private String telefono;
    private String nombre;
    private String apellido;
    private String tipousuario;
-   private Vehiculo vehiculo;
+   private List<UsuarioVehiculo> vehiculos = new ArrayList<>();
 
-    public Usuario(String idusuario, String carnet, String telefono, String nombre, String apellido, String tipousuario) {
-        this.idusuario = idusuario;
+    public Usuario(){}
+    
+    public Usuario(int id, String carnet, String telefono, String nombre, String apellido, String tipousuario) {
+        this.id = id;
         this.carnet = carnet;
         this.telefono = telefono;
         this.nombre = nombre;
@@ -18,12 +23,12 @@ public class Usuario {
         this.tipousuario = tipousuario;
     }
 
-    public String getIdusuario() {
-        return idusuario;
+    public int getId() {
+        return id;
     }
 
-    public void setIdusuario(String idusuario) {
-        this.idusuario = idusuario;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCarnet() {
@@ -57,20 +62,20 @@ public class Usuario {
     public void setApellido(String apellido) {
         this.apellido = apellido;
     }
-    
-    public String getTipousuario(){
+
+    public String getTipousuario() {
         return tipousuario;
     }
-    
-    public void setTipoUsuario(String tipousuario){
+
+    public void setTipousuario(String tipousuario) {
         this.tipousuario = tipousuario;
     }
 
-    public Vehiculo getVehiculo() {
-        return vehiculo;
+    public List<UsuarioVehiculo> getVehiculos() {
+        return vehiculos;
     }
 
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public void setVehiculos(List<UsuarioVehiculo> vehiculos) {
+        this.vehiculos = vehiculos;
     }
 }
