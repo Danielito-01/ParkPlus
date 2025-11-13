@@ -39,12 +39,13 @@ public class GestionCAS {
         int contador = 0;
         int duplicadosArchivo = 0;
         int duplicadosBD = 0;
+        int areasTotal;
         
         ArrayList<String> codigosRA = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
-
+            
             while ((linea = br.readLine()) != null) {
                 
                 if (linea.trim().isEmpty()){
@@ -94,6 +95,11 @@ public class GestionCAS {
                 int capacidad = Integer.parseInt(partes[2].trim());
                 String tipodevehiculo = partes[3].trim().toUpperCase();
                 
+                if (daoC.existeABD(nombre)) {
+                    System.out.println("El area ya existe: "+ nombre);
+                    continue;
+                }
+                
                 if (!("Estudiantes".equalsIgnoreCase(nombre) || "Docentes".equalsIgnoreCase(nombre) || "Motos".equalsIgnoreCase(nombre))) {
                     System.out.println("Area no permitida, solo permite: Estudiante, Docente y Motos.");
                     continue;
@@ -118,7 +124,7 @@ public class GestionCAS {
                 cargaAreas.add(new Area(0, codigo, nombre, capacidad, tipodevehiculo));
                 contador++;
             }
-
+            
             JOptionPane.showMessageDialog(parent,
                 "Carga completada.\n"
                 + "Areas cargadas: " + contador,

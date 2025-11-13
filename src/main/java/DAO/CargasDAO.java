@@ -143,6 +143,33 @@ public class CargasDAO {
         }
         return null;
     }
-
+    
+    public boolean existeABD(String nombre){
+        boolean existe = false;
+        java.sql.Connection con = null;
+        java.sql.PreparedStatement ps = null;
+        java.sql.ResultSet rs = null;
+        
+        try {
+            con = Conexion.Conectar();
+            ps = con.prepareStatement("SELECT COUNT(*) FROM area WHERE nombre = ?");
+            ps.setString(1, nombre);
+            rs = ps.executeQuery();
             
+            if (rs.next() && rs.getInt(1) > 0) {
+                existe = true;
+            }
+        } catch(Exception e){
+            System.out.println("Error verificando el nombre de area en la BD" + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                System.err.println("Error cerrando conexión: " + e.getMessage());
+            }
+        }
+        return existe;    
+    }
 }
