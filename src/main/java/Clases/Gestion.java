@@ -456,10 +456,12 @@ public class Gestion {
                 continue;
             }
                 
-            if (relacionesLeidas1.contains(clave1)) {
-                System.out.println("Ya tiene propietario en el archivo" + clave1);
+            if ("propietario".equalsIgnoreCase(rol)) {
+                if (relacionesLeidas1.contains(clave1)) {
+                System.out.println("Ya tiene propietario en el archivo " + carnet + clave1);
                 duplicadosArchivo++;
                 continue;
+                }
             }
             
             // 🔹 3. Validar si ya existe relación en BD (carnet + placa)

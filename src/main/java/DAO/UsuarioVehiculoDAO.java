@@ -97,8 +97,8 @@ public class UsuarioVehiculoDAO {
     }  
     
     public boolean asociarUV(ArrayList<UsuarioVehiculo> relaciones) {
-    String sqlSelectUsuario = "SELECT idUsuario FROM usuario WHERE carnet = ?";
-    String sqlSelectVehiculo = "SELECT idVehiculo FROM vehiculo WHERE placa = ?";
+    String sqlSelectUsuario = "SELECT id FROM usuario WHERE carnet = ?";
+    String sqlSelectVehiculo = "SELECT id FROM vehiculo WHERE placa = ?";
     String sqlInsert = "INSERT INTO usuario_vehiculo (idUsuario, idVehiculo, rol) VALUES (?, ?, ?)";
 
     try (Connection conn = Conexion.Conectar();
@@ -116,7 +116,7 @@ public class UsuarioVehiculoDAO {
             psSelectUsuario.setString(1, carnet);
             try (ResultSet rsU = psSelectUsuario.executeQuery()) {
                 if (rsU.next()) {
-                    idUsuario = rsU.getInt("idUsuario");
+                    idUsuario = rsU.getInt("id");
                 } else {
                     System.out.println("Usuario no encontrado: " + carnet);
                     continue; // si no existe, saltamos
@@ -128,7 +128,7 @@ public class UsuarioVehiculoDAO {
             psSelectVehiculo.setString(1, placa);
             try (ResultSet rsV = psSelectVehiculo.executeQuery()) {
                 if (rsV.next()) {
-                    idVehiculo = rsV.getInt("idVehiculo");
+                    idVehiculo = rsV.getInt("id");
                 } else {
                     System.out.println("Vehículo no encontrado: " + placa);
                     continue; // si no existe, saltamos
@@ -144,11 +144,11 @@ public class UsuarioVehiculoDAO {
 
         // Ejecutar todos los INSERT juntos
         psInsert.executeBatch();
-        System.out.println("✅ Se asociaron correctamente " + relaciones.size() + " usuario(s) y vehículo(s).");
+        System.out.println("Se asociaron correctamente " + relaciones.size() + " usuario(s) y vehiculo(s).");
         return true;
 
         } catch (SQLException e) {
-            System.err.println("❌ Error al asociar usuarios y vehículos: " + e.getMessage());
+            System.err.println("Error al asociar usuarios y vehiculos: " + e.getMessage());
             return false;
         }
     }
