@@ -5,13 +5,21 @@
 package Ventanas;
 
 import Clases.Gestion;
+import DAO.UsuarioDAO;
+import DAO.UsuarioVehiculoDAO;
+import DAO.VehiculoDAO;
+import java.io.File;
 
 /**
  *
  * @author dcuyu
  */
 public class CargaInterfaz extends javax.swing.JDialog {
-    Gestion gestion = new Gestion();  
+    Gestion gestion = new Gestion(); 
+    UsuarioDAO daoU = new UsuarioDAO();
+    VehiculoDAO daoV = new VehiculoDAO();
+    UsuarioVehiculoDAO daoUV = new UsuarioVehiculoDAO();
+    
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CargaInterfaz.class.getName());
 
     /**
@@ -33,12 +41,25 @@ public class CargaInterfaz extends javax.swing.JDialog {
 
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaCarga = new javax.swing.JTable();
+        tablaCargaU = new javax.swing.JTable();
+        btnAbrirU = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        btnAbrirV = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaCargaV = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablaCargaAV = new javax.swing.JTable();
+        btnAbrirAV = new javax.swing.JButton();
         btnCargar = new javax.swing.JButton();
+        btnLimpiarU = new javax.swing.JButton();
+        btnLimpiarV = new javax.swing.JButton();
+        btnLimpiarAV = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        tablaCarga.setModel(new javax.swing.table.DefaultTableModel(
+        tablaCargaU.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -46,12 +67,83 @@ public class CargaInterfaz extends javax.swing.JDialog {
                 "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
             }
         ));
-        jScrollPane1.setViewportView(tablaCarga);
+        jScrollPane1.setViewportView(tablaCargaU);
 
-        btnCargar.setText("Cargar");
+        btnAbrirU.setText("Abrir");
+        btnAbrirU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirUActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel1.setText("Usuarios");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setText("Vehiculos");
+
+        btnAbrirV.setText("Abrir");
+        btnAbrirV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirVActionPerformed(evt);
+            }
+        });
+
+        tablaCargaV.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Placa", "Color", "Tipo"
+            }
+        ));
+        jScrollPane2.setViewportView(tablaCargaV);
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel3.setText("Asociacion");
+
+        tablaCargaAV.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Carnet", "Placa", "Rol"
+            }
+        ));
+        jScrollPane3.setViewportView(tablaCargaAV);
+
+        btnAbrirAV.setText("Abrir");
+        btnAbrirAV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAbrirAVActionPerformed(evt);
+            }
+        });
+
+        btnCargar.setText("Cargar Datos");
         btnCargar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCargarActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarU.setText("Limpiar");
+        btnLimpiarU.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarUActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarV.setText("Limpiar");
+        btnLimpiarV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarVActionPerformed(evt);
+            }
+        });
+
+        btnLimpiarAV.setText("Limpiar");
+        btnLimpiarAV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarAVActionPerformed(evt);
             }
         });
 
@@ -61,40 +153,119 @@ public class CargaInterfaz extends javax.swing.JDialog {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnCargar)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(btnAbrirV)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnLimpiarV))
+                            .addComponent(jScrollPane1))
+                        .addGap(51, 51, 51))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btnAbrirU)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLimpiarU)
+                        .addGap(28, 28, 28)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel3)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(btnAbrirAV)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnLimpiarAV))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(14, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnCargar)
+                .addGap(380, 380, 380))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnCargar)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAbrirU)
+                    .addComponent(btnAbrirAV)
+                    .addComponent(btnLimpiarU)
+                    .addComponent(btnLimpiarAV))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel2)
+                        .addGap(12, 12, 12)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAbrirV)
+                            .addComponent(btnLimpiarV))
+                        .addGap(8, 8, 8)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 492, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
+                .addComponent(btnCargar)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAbrirUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirUActionPerformed
+      File archivo = gestion.cargarArchivo(this);
+      gestion.leerArchivoU(archivo, this);
+      gestion.agregarCarga(tablaCargaU,"usuario");
+    }//GEN-LAST:event_btnAbrirUActionPerformed
+
+    private void btnLimpiarUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarUActionPerformed
+        gestion.limpiarTablaC(this, tablaCargaU);
+        gestion.limpiarArreglo("usuario");
+    }//GEN-LAST:event_btnLimpiarUActionPerformed
+
+    private void btnAbrirVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirVActionPerformed
+        File archivo = gestion.cargarArchivo(this);
+        gestion.leerArchivoV(archivo, this);
+        gestion.agregarCarga(tablaCargaV,"vehiculo");
+    }//GEN-LAST:event_btnAbrirVActionPerformed
+
+    private void btnLimpiarVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarVActionPerformed
+        gestion.limpiarTablaC(this, tablaCargaV);
+        gestion.limpiarArreglo("vehiculo");
+    }//GEN-LAST:event_btnLimpiarVActionPerformed
+
+    private void btnAbrirAVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirAVActionPerformed
+        File archivo = gestion.cargarArchivo(this);
+        gestion.leerArchivoAV(archivo,this);
+        gestion.agregarCarga(tablaCargaAV, "av");
+    }//GEN-LAST:event_btnAbrirAVActionPerformed
+
+    private void btnLimpiarAVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarAVActionPerformed
+        gestion.limpiarTablaC(this, tablaCargaAV);
+        gestion.limpiarArreglo("av");
+    }//GEN-LAST:event_btnLimpiarAVActionPerformed
+
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
-      gestion.cargarArchivo(this);
-      gestion.agregarCarga(tablaCarga);
+        daoU.insertarU(gestion.getCargaUsuarios());
+        daoV.insertar(gestion.getCargaVehiculos());
+        daoUV.asociarUV(gestion.getCargaAV());
     }//GEN-LAST:event_btnCargarActionPerformed
 
     /**
@@ -135,9 +306,22 @@ public class CargaInterfaz extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbrirAV;
+    private javax.swing.JButton btnAbrirU;
+    private javax.swing.JButton btnAbrirV;
     private javax.swing.JButton btnCargar;
+    private javax.swing.JButton btnLimpiarAV;
+    private javax.swing.JButton btnLimpiarU;
+    private javax.swing.JButton btnLimpiarV;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable tablaCarga;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable tablaCargaAV;
+    private javax.swing.JTable tablaCargaU;
+    private javax.swing.JTable tablaCargaV;
     // End of variables declaration//GEN-END:variables
 }

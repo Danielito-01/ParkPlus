@@ -1,8 +1,5 @@
 package Clases;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Usuario {
    private int id;
    private String carnet;
@@ -10,7 +7,6 @@ public class Usuario {
    private String nombre;
    private String apellido;
    private String tipousuario;
-   private List<UsuarioVehiculo> vehiculos = new ArrayList<>();
 
     public Usuario(){}
     
@@ -69,13 +65,5 @@ public class Usuario {
 
     public void setTipousuario(String tipousuario) {
         this.tipousuario = tipousuario;
-    }
-
-    public List<UsuarioVehiculo> getVehiculos() {
-        return vehiculos;
-    }
-
-    public void setVehiculos(List<UsuarioVehiculo> vehiculos) {
-        this.vehiculos = vehiculos;
     }
 }

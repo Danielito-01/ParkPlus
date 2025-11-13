@@ -1,30 +1,30 @@
 package Clases;
 
 public class UsuarioVehiculo {
-    private int idusuario;
-    private int idvehiculo;
+    private String carnet;
+    private String placa;
     private String rol;
 
-    public UsuarioVehiculo(int idusuario, int idvehiculo, String rol) {
-        this.idusuario = idusuario;
-        this.idvehiculo = idvehiculo;
+    public UsuarioVehiculo(String carnet, String placa, String rol) {
+        this.carnet = carnet;
+        this.placa = placa;
         this.rol = rol;
     }
 
-    public int getIdusuario() {
-        return idusuario;
+    public String getCarnet() {
+        return carnet;
     }
 
-    public void setIdusuario(int idusuario) {
-        this.idusuario = idusuario;
+    public void setCarnet(String carnet) {
+        this.carnet = carnet;
     }
 
-    public int getIdvehiculo() {
-        return idvehiculo;
+    public String getPlaca() {
+        return placa;
     }
 
-    public void setIdvehiculo(int idvehiculo) {
-        this.idvehiculo = idvehiculo;
+    public void setPlaca(String placa) {
+        this.placa = placa;
     }
 
     public String getRol() {
@@ -33,7 +33,5 @@ public class UsuarioVehiculo {
 
     public void setRol(String rol) {
         this.rol = rol;
-    }
-    
-    
+    } 
 }

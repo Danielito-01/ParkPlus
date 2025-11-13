@@ -1,15 +1,12 @@
 package Clases;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Vehiculo {
     private int id;
     private String placa;
     private String color;
     private String tipovehiculo;
     private String rol;
-    private List<UsuarioVehiculo> usuarios = new ArrayList<>();
+    
     
     public Vehiculo(){}
     
@@ -51,14 +48,6 @@ public class Vehiculo {
 
     public void setTipovehiculo(String tipovehiculo) {
         this.tipovehiculo = tipovehiculo;
-    }
-
-    public List<UsuarioVehiculo> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<UsuarioVehiculo> usuarios) {
-        this.usuarios = usuarios;
     }
 
     public String getRol() {

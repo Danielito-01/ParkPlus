@@ -396,7 +396,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     }//GEN-LAST:event_rbtnDocenteActionPerformed
 
     private void btnAgregaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregaruActionPerformed
-        String carnet = txtCarnet.getText();
+        String carnet = txtCarnet.getText().toUpperCase();
         
         if(!validarCamposu()){
             JOptionPane.showMessageDialog(this, "Por favor llene todos los campos.");
@@ -416,18 +416,18 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
             return;
         }
         
-        String telefono = txtTelefono.getText();
-        String nombre = txtNombre.getText();
-        String apellido = txtApellido.getText();
+        String telefono = txtTelefono.getText().toUpperCase();
+        String nombre = txtNombre.getText().toUpperCase();
+        String apellido = txtApellido.getText().toUpperCase();
         String tipousuario;
-        String carrera = txtCarrera.getSelectedItem().toString();
-        String semestre = txtSemestre.getSelectedItem().toString();   
+        String carrera = txtCarrera.getSelectedItem().toString().toUpperCase();
+        String semestre = txtSemestre.getSelectedItem().toString().toUpperCase();   
         
         if (rbtnEstudiante.isSelected()) {
-        tipousuario = "Estudiante";
+        tipousuario = "ESTUDIANTE";
         usuarioActual = new Estudiante(0, carnet, telefono, nombre, apellido, tipousuario, carrera, semestre);
         } else if (rbtnDocente.isSelected()) {
-        tipousuario = "Docente";
+        tipousuario = "DOCENTE";
         usuarioActual = new Docente(0, carnet, telefono, nombre, apellido, tipousuario);  
         }
         
@@ -463,8 +463,8 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     }
     
     private void btnAgregarvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarvActionPerformed
-        String placa = txtPlaca.getText();
-        String rol = txtRol.getSelectedItem().toString();
+        String placa = txtPlaca.getText().toUpperCase();
+        String rol = txtRol.getSelectedItem().toString().toUpperCase();
         
         if(!usuarioPendiente){
             JOptionPane.showMessageDialog(this, "Agregue un usuario para asignarle vehiculos.");
@@ -478,12 +478,12 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         
         if (rol.equalsIgnoreCase("Propietario")) {
             if (daoUV.tienePropietario(placa)) {
-                JOptionPane.showMessageDialog(this, "Este vehiculo ya tien un propietario registrado.");
+                JOptionPane.showMessageDialog(this, "Este vehiculo ya tienE un propietario registrado.");
                 return;
             }
         }
         
-        String color = txtColor.getText();
+        String color = txtColor.getText().toUpperCase();
         String tipovehiculo;
         
         if (gestion.yaExisteVenLista(this.vehiculo, placa)) {
@@ -496,7 +496,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         }
         
         if (rbtnMoto.isSelected()) {
-        tipovehiculo = "Moto";
+        tipovehiculo = "MOTO";
         vehiculo.add(new Moto(0, placa, color, tipovehiculo, rol));
       
         if (!daoV.existeVehiculo(placa)) {
@@ -505,7 +505,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         
         }
         if (rbtnCarro.isSelected()) {
-        tipovehiculo = "Carro";
+        tipovehiculo = "CARRO";
         vehiculo.add(new Carro(0, placa, color, tipovehiculo, rol));
         
             if (!daoV.existeVehiculo(placa)) {

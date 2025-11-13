@@ -53,7 +53,7 @@ public class VehiculoDAO {
         } catch (SQLException e) {
             System.err.println("Error al verificar existencia de placa: " + e.getMessage());
             // En caso de error de conexión/SQL, asumimos que no se pudo verificar (o manejamos el error)
-            return true; // Podrías devolver true para detener la inserción por seguridad, o false si el error no es de existencia.
+            return false; // Podrías devolver true para detener la inserción por seguridad, o false si el error no es de existencia.
         }
         return false; // Por defecto si no se pudo determinar por alguna razón.
     }

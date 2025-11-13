@@ -1,5 +1,6 @@
 package DAO;
 
+import Clases.UsuarioVehiculo;
 import Clases.Vehiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -94,4 +95,61 @@ public class UsuarioVehiculoDAO {
 
     return false;
     }  
+    
+    public boolean asociarUV(ArrayList<UsuarioVehiculo> relaciones) {
+    String sqlSelectUsuario = "SELECT idUsuario FROM usuario WHERE carnet = ?";
+    String sqlSelectVehiculo = "SELECT idVehiculo FROM vehiculo WHERE placa = ?";
+    String sqlInsert = "INSERT INTO usuario_vehiculo (idUsuario, idVehiculo, rol) VALUES (?, ?, ?)";
+
+    try (Connection conn = Conexion.Conectar();
+         PreparedStatement psSelectUsuario = conn.prepareStatement(sqlSelectUsuario);
+         PreparedStatement psSelectVehiculo = conn.prepareStatement(sqlSelectVehiculo);
+         PreparedStatement psInsert = conn.prepareStatement(sqlInsert)) {
+
+        for (UsuarioVehiculo rel : relaciones) {
+            String carnet = rel.getCarnet();
+            String placa = rel.getPlaca();
+            String rol = rel.getRol();
+
+            // 🔹 Buscar idUsuario
+            int idUsuario = -1;
+            psSelectUsuario.setString(1, carnet);
+            try (ResultSet rsU = psSelectUsuario.executeQuery()) {
+                if (rsU.next()) {
+                    idUsuario = rsU.getInt("idUsuario");
+                } else {
+                    System.out.println("Usuario no encontrado: " + carnet);
+                    continue; // si no existe, saltamos
+                }
+            }
+
+            // 🔹 Buscar idVehiculo
+            int idVehiculo = -1;
+            psSelectVehiculo.setString(1, placa);
+            try (ResultSet rsV = psSelectVehiculo.executeQuery()) {
+                if (rsV.next()) {
+                    idVehiculo = rsV.getInt("idVehiculo");
+                } else {
+                    System.out.println("Vehículo no encontrado: " + placa);
+                    continue; // si no existe, saltamos
+                }
+            }
+
+            // 🔹 Insertar la relación
+            psInsert.setInt(1, idUsuario);
+            psInsert.setInt(2, idVehiculo);
+            psInsert.setString(3, rol);
+            psInsert.addBatch();
+        }
+
+        // Ejecutar todos los INSERT juntos
+        psInsert.executeBatch();
+        System.out.println("✅ Se asociaron correctamente " + relaciones.size() + " usuario(s) y vehículo(s).");
+        return true;
+
+        } catch (SQLException e) {
+            System.err.println("❌ Error al asociar usuarios y vehículos: " + e.getMessage());
+            return false;
+        }
+    }
 }
