@@ -8,7 +8,7 @@ package Ventanas;
 import Clases.Carro;
 import Clases.Docente;
 import Clases.Estudiante;
-import Clases.Gestion;
+import Gestiones.Gestion;
 import Clases.Moto;
 import Clases.Usuario;
 import Clases.UsuarioVehiculo;
@@ -592,22 +592,33 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
             return;
         }
         
-        daoU.insertar(usuarioActual);
-        int idU = daoU.obtenerId(usuarioActual.getCarnet());
-        if (vehiculos.size()>=1) {
-            daoV.insertar(vehiculos);
+         int respuesta = JOptionPane.showConfirmDialog(
+            null,
+            "Esta seguro de guardar los datos?",
+            "Confirmar Guardado", 
+            JOptionPane.YES_NO_OPTION 
+        );
+
+        if (respuesta == JOptionPane.YES_OPTION) {
+            daoU.insertar(usuarioActual);
+            int idU = daoU.obtenerId(usuarioActual.getCarnet());
+            if (vehiculos.size()>=1) {
+                daoV.insertarV(vehiculos);
+            }
+            idsV = daoV.obtenerIdsv(vehiculo);
+            daoUV.asociarUsuarioVehiculos(idU, vehiculo , idsV);
+            gestion.limpiarUsuario(this, tablaUsuarios, txtCarnet, txtTelefono, txtNombre, txtApellido, txtCarrera, txtSemestre, tipoUsuario);
+            gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
+            usuarioPendiente = false;
+            vehiculoMinimo = false;
+            vehiculo.clear();
+            JOptionPane.showMessageDialog(this, "Se guardo correctamente");
+            return;
+        } else if (respuesta == JOptionPane.NO_OPTION) {
+            return;  
+        } else if (respuesta == JOptionPane.CLOSED_OPTION) {
+            return;
         }
-        idsV = daoV.obtenerIdsv(vehiculo);
-        daoUV.asociarUsuarioVehiculos(idU, vehiculo , idsV);
-        
-        
-        
-        gestion.limpiarUsuario(this, tablaUsuarios, txtCarnet, txtTelefono, txtNombre, txtApellido, txtCarrera, txtSemestre, tipoUsuario);
-        gestion.limpiarVehiculo(this, tablaVehiculos, txtPlaca, txtColor, txtRol, tipoVehiculo);
-        usuarioPendiente = false;
-        vehiculoMinimo = false;
-        vehiculo.clear();
-        JOptionPane.showMessageDialog(this, "Datos guardados correctamente.");
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     /**

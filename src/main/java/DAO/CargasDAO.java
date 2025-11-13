@@ -1,6 +1,10 @@
 
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 public class CargasDAO {
     
     public boolean existeEnBDU(String carnet) {
@@ -64,4 +68,81 @@ public class CargasDAO {
 
         return existe;
     }
+    
+    public boolean existeCA(String codigo){
+        boolean existe = false;
+        java.sql.Connection con = null;
+        java.sql.PreparedStatement ps = null;
+        java.sql.ResultSet rs = null;
+        
+        try {
+            con = Conexion.Conectar();
+            ps = con.prepareStatement("SELECT COUNT(*) FROM area WHERE codigo = ?");
+            ps.setString(1, codigo);
+            rs = ps.executeQuery();
+            
+            if (rs.next() && rs.getInt(1) > 0) {
+                existe = true;
+            }
+        } catch(Exception e){
+            System.out.println("Error verificando el codigo de area en la BD" + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                System.err.println("Error cerrando conexión: " + e.getMessage());
+            }
+        }
+        return existe;    
+    }
+    
+    public boolean existeCS(String codigo){
+        boolean existe = false;
+        java.sql.Connection con = null;
+        java.sql.PreparedStatement ps = null;
+        java.sql.ResultSet rs = null;
+        
+        try {
+            con = Conexion.Conectar();
+            ps = con.prepareStatement("SELECT COUNT(*) FROM spot WHERE codigo = ?");
+            ps.setString(1, codigo);
+            rs = ps.executeQuery();
+            
+            if (rs.next() && rs.getInt(1) > 0) {
+                existe = true;
+            }
+        } catch(Exception e){
+            System.out.println("Error verificando el codigo de spot en la BD" + e.getMessage());
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (ps != null) ps.close();
+                if (con != null) con.close();
+            } catch (Exception e) {
+                System.err.println("Error cerrando conexión: " + e.getMessage());
+            }
+        }
+        return existe;    
+    }
+    
+    public String tipoVADB(String codigo){
+        try (Connection con = Conexion.Conectar();
+             PreparedStatement ps = con.prepareStatement("SELECT tipodevehiculo FROM area WHERE codigo = ?")) {
+
+            ps.setString(1, codigo);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("tipodevehiculo");
+                }
+            }
+        } catch(Exception e){
+            System.out.println("Error buscando el tipo de vehiculo del area en la BD: " + e.getMessage());
+        }
+        return null;
+    }
+
+            
 }

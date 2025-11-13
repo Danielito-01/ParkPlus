@@ -1,5 +1,12 @@
-package Clases;
+package Gestiones;
 
+import Clases.Carro;
+import Clases.Docente;
+import Clases.Estudiante;
+import Clases.Moto;
+import Clases.Usuario;
+import Clases.UsuarioVehiculo;
+import Clases.Vehiculo;
 import DAO.CargasDAO;
 import DAO.UsuarioDAO;
 import DAO.UsuarioVehiculoDAO;

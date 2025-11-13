@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class VehiculoDAO {
     
-    public boolean insertar(ArrayList<Vehiculo> vehiculos) {
+    public boolean insertarV(ArrayList<Vehiculo> vehiculos) {
         String sql = "INSERT INTO vehiculo (placa, color, tipo) VALUES (?, ?, ?)";
 
         try (Connection conn = Conexion.Conectar();

@@ -4,11 +4,12 @@
  */
 package Ventanas;
 
-import Clases.Gestion;
+import Gestiones.Gestion;
 import DAO.UsuarioDAO;
 import DAO.UsuarioVehiculoDAO;
 import DAO.VehiculoDAO;
 import java.io.File;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,6 +20,9 @@ public class CargaInterfaz extends javax.swing.JDialog {
     UsuarioDAO daoU = new UsuarioDAO();
     VehiculoDAO daoV = new VehiculoDAO();
     UsuarioVehiculoDAO daoUV = new UsuarioVehiculoDAO();
+    boolean datosCargadosU = false;
+    boolean datosCargadosV = false;
+    boolean datosCargadosUV = false;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(CargaInterfaz.class.getName());
 
@@ -230,39 +234,76 @@ public class CargaInterfaz extends javax.swing.JDialog {
       File archivo = gestion.cargarArchivo(this);
       gestion.leerArchivoU(archivo, this);
       gestion.agregarCarga(tablaCargaU,"usuario");
+      datosCargadosU = true;
     }//GEN-LAST:event_btnAbrirUActionPerformed
 
     private void btnLimpiarUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarUActionPerformed
         gestion.limpiarTablaC(this, tablaCargaU);
         gestion.limpiarArreglo("usuario");
+        datosCargadosU = false;
     }//GEN-LAST:event_btnLimpiarUActionPerformed
 
     private void btnAbrirVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirVActionPerformed
         File archivo = gestion.cargarArchivo(this);
         gestion.leerArchivoV(archivo, this);
         gestion.agregarCarga(tablaCargaV,"vehiculo");
+        datosCargadosV = true;
     }//GEN-LAST:event_btnAbrirVActionPerformed
 
     private void btnLimpiarVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarVActionPerformed
         gestion.limpiarTablaC(this, tablaCargaV);
         gestion.limpiarArreglo("vehiculo");
+        datosCargadosV = false;
     }//GEN-LAST:event_btnLimpiarVActionPerformed
 
     private void btnAbrirAVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAbrirAVActionPerformed
         File archivo = gestion.cargarArchivo(this);
         gestion.leerArchivoAV(archivo,this);
         gestion.agregarCarga(tablaCargaAV, "av");
+        datosCargadosUV = true;
     }//GEN-LAST:event_btnAbrirAVActionPerformed
 
     private void btnLimpiarAVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarAVActionPerformed
         gestion.limpiarTablaC(this, tablaCargaAV);
         gestion.limpiarArreglo("av");
+        datosCargadosUV = false;
     }//GEN-LAST:event_btnLimpiarAVActionPerformed
 
     private void btnCargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarActionPerformed
-        daoU.insertarU(gestion.getCargaUsuarios());
-        daoV.insertar(gestion.getCargaVehiculos());
-        daoUV.asociarUV(gestion.getCargaAV());
+        
+        if (datosCargadosU || datosCargadosV || datosCargadosUV) {
+            int respuesta = JOptionPane.showConfirmDialog(
+            null,
+            "Esta seguro de guardar los datos?",
+            "Confirmar Guardado", 
+            JOptionPane.YES_NO_OPTION 
+            );
+            
+            if (respuesta == JOptionPane.YES_OPTION) {
+                if (datosCargadosU) {
+                   daoU.insertarU(gestion.getCargaUsuarios());
+                   gestion.limpiarTablaC(this, tablaCargaU);
+                   gestion.limpiarArreglo("usuario");
+                }
+                if (datosCargadosV) {
+                   daoV.insertarV(gestion.getCargaVehiculos());
+                   gestion.limpiarTablaC(this, tablaCargaV);
+                   gestion.limpiarArreglo("vehiculo");
+                }
+                if (datosCargadosUV) {
+                    daoUV.asociarUV(gestion.getCargaAV());
+                    gestion.limpiarTablaC(this, tablaCargaAV);
+                    gestion.limpiarArreglo("av");
+                }
+                JOptionPane.showMessageDialog(this, "Guardado correctamente");
+                
+           } else if (respuesta == JOptionPane.NO_OPTION) {
+                    return;  
+                } else if (respuesta == JOptionPane.CLOSED_OPTION) {
+                    return;
+                }
+        }
+        
     }//GEN-LAST:event_btnCargarActionPerformed
 
     /**
