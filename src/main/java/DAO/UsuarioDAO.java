@@ -115,26 +115,7 @@ public class UsuarioDAO {
             return false;
         }
     }
-     
-    public String obtenerNA(String carnet){
-        String sql = "SELECT nombre, apellido FROM usuario WHERE carnet = ?";
-        try (Connection conn = Conexion.Conectar();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, carnet);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String na = rs.getString("nombre") +" "+ rs.getString("apellido");
-          
-                    return na;
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Error al obtener nombre y apellido " + e.getMessage());
-        }
-        return "";
-    }
-    
+        
     public ArrayList<String> obtenerPlacasPorCarnet(String carnet) {
         ArrayList<String> placas = new ArrayList<>();
 
