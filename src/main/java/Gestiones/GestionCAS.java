@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -223,10 +224,14 @@ public class GestionCAS {
                     }
                 }
                 
-                if (!(tipodevehiculo.equalsIgnoreCase(TipoVAA(codigodearea)))) {
+                if (codigosRS.contains(codigo)) {
+                    if (!(tipodevehiculo.equalsIgnoreCase(TipoVAA(codigodearea)))) {
                     System.out.println("El tipo de vehiculo del spot no coincide con el area: "+ tipodevehiculo +" "+ TipoVAA(codigodearea));
                     continue;
+                    }
                 }
+                
+                
                                
                 boolean estado = false;
                 if ("Libre".equalsIgnoreCase(estadoSTR)) {
@@ -354,13 +359,23 @@ public class GestionCAS {
                 ps.setString(2, s.getCodigodearea());
                 ps.setString(3, s.getTipodevehiculo());
                 ps.setBoolean(4, s.isEstado());
-                
-                ps.addBatch(); // agrega el INSERT a un lote
+                ps.addBatch();
             }
 
-            ps.executeBatch(); // ejecuta todos los INSERT juntos
-            System.out.println("Se insertaron " + spots.size() + " spots correctamente.");
-            return true;
+            int[] resultados = ps.executeBatch();
+
+            int insertados = 0;
+            int fallados = 0;
+
+            for (int r : resultados) {
+                if (r == 1) insertados++;       
+                else if (r == 0) fallados++;       
+            }
+
+            System.out.println("Spots insertados en la BD: " + insertados);
+            System.out.println("Spots rechazados " + fallados);
+
+            return insertados > 0;
 
         } catch (SQLException e) {
             System.err.println("Error al insertar spots: " + e.getMessage());
