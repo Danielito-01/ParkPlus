@@ -68,9 +68,17 @@ public class CargaInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
+                "CARNET", "TELEFONO", "NOMBRE", "APELLIDO", "USUARIO", "CARRERA", "SEMESTRE"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaCargaU);
 
         btnAbrirU.setText("Abrir");
@@ -98,9 +106,17 @@ public class CargaInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Placa", "Color", "Tipo"
+                "PLACA", "COLOR", "TIPO"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tablaCargaV);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -111,9 +127,17 @@ public class CargaInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Carnet", "Placa", "Rol"
+                "CARNET", "PLACA", "ROL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(tablaCargaAV);
 
         btnAbrirAV.setText("Abrir");

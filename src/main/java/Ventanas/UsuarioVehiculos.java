@@ -69,9 +69,17 @@ public class UsuarioVehiculos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Carnet", "Telefono", "Nombre", "Apellido", "Tipo", "Carrera", "Semestre"
+                "CARNET", "TELEFONO", "NOMBRE", "APELLIDO", "TIPO", "CARRERA", "SEMESTRE"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane3.setViewportView(tablaU);
 
         tablaV.setModel(new javax.swing.table.DefaultTableModel(
@@ -79,9 +87,17 @@ public class UsuarioVehiculos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Placa", "Color", "Tipo"
+                "PLACA", "COLOR", "TIPO"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane4.setViewportView(tablaV);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -92,9 +108,17 @@ public class UsuarioVehiculos extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Carnet", "Nombre", "Tipo", "Placa", "Vehiculo", "Rol"
+                "CARNET", "NOMBRE", "TIPO", "PLACA", "VEHICULO", "ROL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaUV);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

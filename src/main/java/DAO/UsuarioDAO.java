@@ -1,8 +1,9 @@
 
 package DAO;
 
+import Clases.Docente;
+import Clases.Estudiante;
 import Clases.Usuario;
-import Clases.Vehiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -113,5 +114,89 @@ public class UsuarioDAO {
             System.err.println("Error al insertar usuarios: " + e.getMessage());
             return false;
         }
+    }
+     
+    public String obtenerNA(String carnet){
+        String sql = "SELECT nombre, apellido FROM usuario WHERE carnet = ?";
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, carnet);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String na = rs.getString("nombre") +" "+ rs.getString("apellido");
+          
+                    return na;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener nombre y apellido " + e.getMessage());
+        }
+        return "";
+    }
+    
+    public ArrayList<String> obtenerPlacasPorCarnet(String carnet) {
+        ArrayList<String> placas = new ArrayList<>();
+
+        String sql = "SELECT v.placa " +
+                     "FROM usuario u " +
+                     "JOIN usuario_vehiculo uv ON u.id = uv.idUsuario " +
+                     "JOIN vehiculo v ON v.id = uv.idVehiculo " +
+                     "WHERE u.carnet = ?";
+
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, carnet);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    placas.add(rs.getString("placa"));
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener placas: " + e.getMessage());
+        }
+
+        return placas;
+    }
+    
+    public Usuario obtenerUsuarioPorCarnet(String carnet) {
+        String sql = "SELECT carnet, telefono, nombre, apellido, tipoUsuario, carrera, semestre FROM usuario WHERE carnet = ?";
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, carnet);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String tipo = rs.getString("tipoUsuario");
+
+                    if ("Estudiante".equalsIgnoreCase(tipo)) {
+                        Estudiante est = new Estudiante();
+                        est.setCarnet(rs.getString("carnet"));
+                        est.setTelefono(rs.getString("telefono"));
+                        est.setNombre(rs.getString("nombre"));
+                        est.setApellido(rs.getString("apellido"));
+                        est.setTipousuario(tipo);
+                        est.setCarrera(rs.getString("carrera"));
+                        est.setSemestre(rs.getString("semestre"));
+                        return est;
+                    } else if ("Docente".equalsIgnoreCase(tipo)) {
+                        Docente doc = new Docente();
+                        doc.setCarnet(rs.getString("carnet"));
+                        doc.setTelefono(rs.getString("telefono"));
+                        doc.setNombre(rs.getString("nombre"));
+                        doc.setApellido(rs.getString("apellido"));
+                        doc.setTipousuario(tipo);
+                        // aquí podrías agregar campo específico de docente si lo tienes
+                        return doc;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener usuario: " + e.getMessage());
+        }
+        return null;
     }
 }

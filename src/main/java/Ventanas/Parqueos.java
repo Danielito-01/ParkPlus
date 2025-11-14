@@ -4,7 +4,14 @@
  */
 package Ventanas;
 
+import Clases.Spot;
+import Gestiones.GestionPAR;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.swing.ButtonGroup;
 import javax.swing.JToggleButton;
 
 /**
@@ -12,6 +19,7 @@ import javax.swing.JToggleButton;
  * @author dcuyu
  */
 public class Parqueos extends javax.swing.JDialog {
+    GestionPAR gestion = new GestionPAR();
     public  ArrayList<JToggleButton> espaciosMot = new ArrayList<>();
     public  ArrayList<JToggleButton> espaciosDoc = new ArrayList<>();
     public  ArrayList<JToggleButton> espaciosEst = new ArrayList<>();
@@ -24,6 +32,11 @@ public class Parqueos extends javax.swing.JDialog {
     public Parqueos(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        EspaciosM();
+        EspaciosE();
+        EspaciosD();
+        crearGrupos();
+        cargarSpotsEnBotones();
     }
 
     /**
@@ -35,9 +48,6 @@ public class Parqueos extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnGMotos = new javax.swing.ButtonGroup();
-        btnGDocentes = new javax.swing.ButtonGroup();
-        btnGEstudiantes = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         tbtnM1 = new javax.swing.JToggleButton();
@@ -106,6 +116,7 @@ public class Parqueos extends javax.swing.JDialog {
         tbtnE15 = new javax.swing.JToggleButton();
         tbtnE19 = new javax.swing.JToggleButton();
         tbtnE20 = new javax.swing.JToggleButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -114,7 +125,6 @@ public class Parqueos extends javax.swing.JDialog {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Motos");
 
-        btnGMotos.add(tbtnM1);
         tbtnM1.setMaximumSize(new java.awt.Dimension(90, 50));
         tbtnM1.setMinimumSize(new java.awt.Dimension(90, 50));
         tbtnM1.setPreferredSize(new java.awt.Dimension(90, 50));
@@ -124,7 +134,6 @@ public class Parqueos extends javax.swing.JDialog {
             }
         });
 
-        btnGMotos.add(tbtnM2);
         tbtnM2.setMaximumSize(new java.awt.Dimension(90, 50));
         tbtnM2.setMinimumSize(new java.awt.Dimension(90, 50));
         tbtnM2.setPreferredSize(new java.awt.Dimension(90, 50));
@@ -663,6 +672,8 @@ public class Parqueos extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
+        jButton1.setText("Confirmar");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -674,24 +685,31 @@ public class Parqueos extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-      
+   
     private ArrayList<JToggleButton> EspaciosM(){
         espaciosMot.add(tbtnM1); espaciosMot.add(tbtnM2); espaciosMot.add(tbtnM3); espaciosMot.add(tbtnM4); espaciosMot.add(tbtnM5); espaciosMot.add(tbtnM6);
         espaciosMot.add(tbtnM7); espaciosMot.add(tbtnM8); espaciosMot.add(tbtnM9); espaciosMot.add(tbtnM10); espaciosMot.add(tbtnM11); espaciosMot.add(tbtnM12);
@@ -713,6 +731,82 @@ public class Parqueos extends javax.swing.JDialog {
         espaciosEst.add(tbtnE13); espaciosEst.add(tbtnE14); espaciosEst.add(tbtnE15); espaciosEst.add(tbtnE16); espaciosEst.add(tbtnE17); espaciosEst.add(tbtnE18);
         espaciosEst.add(tbtnE19); espaciosEst.add(tbtnE20);
         return espaciosEst;
+    }
+    
+    public void crearGrupos(){
+        ButtonGroup grupoMotos = new ButtonGroup();
+        for (JToggleButton btn : espaciosMot) {
+            grupoMotos.add(btn);
+        }
+
+        ButtonGroup grupoEst = new ButtonGroup();
+        for (JToggleButton btn : espaciosEst) {
+            grupoEst.add(btn);
+        }
+
+        ButtonGroup grupoDoc = new ButtonGroup();
+        for (JToggleButton btn : espaciosDoc) {
+            grupoDoc.add(btn);
+        }
+    }
+    
+    
+    private void cargarSpotsEnBotones() {
+
+        GestionPAR gestion = new GestionPAR();
+
+        // 1. áreas en un mapa codigo -> nombre
+        Map<String, String> mapaAreas = gestion.obtenerNombreAreaPorCodigo();
+
+        // 2. todos los spots desde BD
+        List<Spot> spots = gestion.obtenerTodosLosSpots();
+
+        // índices para asignar botones correctamente
+        int iMoto = 0;
+        int iEst = 0;
+        int iDoc = 0;
+
+        for (Spot s : spots) {
+
+            String areaNombre = mapaAreas.get(s.getCodigodearea()); // Estudiantes/Motos/Docentes
+            JToggleButton boton = null;
+
+            switch (areaNombre) {
+                case "MOTOS":
+                    boton = espaciosMot.get(iMoto++);
+                    break;
+
+                case "ESTUDIANTES":
+                    boton = espaciosEst.get(iEst++);
+                    break;
+
+                case "DOCENTES":
+                    boton = espaciosDoc.get(iDoc++);
+                    break;
+            }
+
+            if (boton != null) {
+
+                // Mostrar info
+                boton.setText("<html>" + s.getCodigo() + "<br>"
+                        + s.getTipodevehiculo() + "<br>" 
+                        + (s.isEstado() ? "Ocupado" : "Libre") +
+                        "</html>"
+                );
+
+                // Guardar el Spot dentro del botón
+                boton.putClientProperty("spot", s);
+
+                // Cambiar color según estado
+                if (s.isEstado()) {  // ocupado
+                    boton.setBackground(Color.RED);
+                    boton.setEnabled(false);   // no se puede seleccionar
+                } else {
+                    boton.setBackground(Color.GREEN);
+                    boton.setEnabled(true);    // libre y seleccionable
+                }
+            }
+        }
     }
     
     private void tbtnM1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnM1ActionPerformed
@@ -757,9 +851,7 @@ public class Parqueos extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup btnGDocentes;
-    private javax.swing.ButtonGroup btnGEstudiantes;
-    private javax.swing.ButtonGroup btnGMotos;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

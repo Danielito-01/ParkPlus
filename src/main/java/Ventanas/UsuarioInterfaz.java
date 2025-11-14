@@ -145,9 +145,17 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Carnet", "Telefono", "Nombre", "Apellido", "Usuario", "Carrera", "Semestre"
+                "CARNET", "TELEFONO", "NOMBRE", "APELLIDO", "USUARIO", "CARRERA", "SEMESTRE"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaUsuarios);
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -280,9 +288,17 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Placa", "Color", "Vehiculo", "Rol"
+                "PLACA", "COLOR", "VEHICULOS", "ROL"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tablaVehiculos);
 
         btnLimpiarv.setText("Limpiar");
@@ -396,7 +412,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     }//GEN-LAST:event_rbtnDocenteActionPerformed
 
     private void btnAgregaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregaruActionPerformed
-        String carnet = txtCarnet.getText().toUpperCase();
+        String carnet = txtCarnet.getText().toUpperCase().trim();
         
         if(!validarCamposu()){
             JOptionPane.showMessageDialog(this, "Por favor llene todos los campos.");
@@ -416,12 +432,12 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
             return;
         }
         
-        String telefono = txtTelefono.getText().toUpperCase();
+        String telefono = txtTelefono.getText().toUpperCase().trim();
         String nombre = txtNombre.getText().toUpperCase();
         String apellido = txtApellido.getText().toUpperCase();
         String tipousuario;
         String carrera = txtCarrera.getSelectedItem().toString().toUpperCase();
-        String semestre = txtSemestre.getSelectedItem().toString().toUpperCase();   
+        String semestre = txtSemestre.getSelectedItem().toString().toUpperCase().trim();   
         
         if (rbtnEstudiante.isSelected()) {
         tipousuario = "ESTUDIANTE";
@@ -463,8 +479,8 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
     }
     
     private void btnAgregarvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarvActionPerformed
-        String placa = txtPlaca.getText().toUpperCase();
-        String rol = txtRol.getSelectedItem().toString().toUpperCase();
+        String placa = txtPlaca.getText().toUpperCase().trim();
+        String rol = txtRol.getSelectedItem().toString().toUpperCase().trim();
         
         if(!usuarioPendiente){
             JOptionPane.showMessageDialog(this, "Agregue un usuario para asignarle vehiculos.");

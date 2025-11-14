@@ -72,9 +72,17 @@ public class CargaAS extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Nombre", "Capacidad", "Tipo de vehiculo"
+                "CODIGO", "NOMBRE", "CAPACIDAD", "TIPO DE VEHICULO"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tablaAreas);
 
         tablaSpots.setModel(new javax.swing.table.DefaultTableModel(
@@ -82,9 +90,17 @@ public class CargaAS extends javax.swing.JDialog {
 
             },
             new String [] {
-                "Codigo", "Codigo de area", "Tipo de vehiculo", "Estado"
+                "CODIGO", "CODIGO DE AREA", "TIPO DE VEHICULO", "ESTADO"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane2.setViewportView(tablaSpots);
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
