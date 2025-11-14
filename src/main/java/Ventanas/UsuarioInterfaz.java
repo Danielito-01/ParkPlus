@@ -494,7 +494,7 @@ public class UsuarioInterfaz extends javax.swing.JDialog {
         
         if (rol.equalsIgnoreCase("Propietario")) {
             if (daoUV.tienePropietario(placa)) {
-                JOptionPane.showMessageDialog(this, "Este vehiculo ya tienE un propietario registrado.");
+                JOptionPane.showMessageDialog(this, "Este vehiculo ya tiene un propietario registrado.");
                 return;
             }
         }

@@ -79,13 +79,14 @@ public class UsuarioVehiculoDAO {
     try (Connection conn = Conexion.Conectar();
          PreparedStatement ps = conn.prepareStatement(sql)) {
 
-        ps.setString(1, carnet);
-        ps.setString(2, placa);
+        ps.setString(1, carnet.toUpperCase().trim());
+        ps.setString(2, placa.toUpperCase().trim());
 
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 int total = rs.getInt("total");
-                return total > 0; // Si hay registros, ya existe la relación
+
+                return total > 0;
             }
         }
 

@@ -23,6 +23,7 @@ import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButton;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -515,5 +516,25 @@ public class Gestion {
 
     public ArrayList<UsuarioVehiculo> getCargaAV() {
         return cargaAV;
+    }
+    
+    public void agregarDatosDeVehiculoAutomatico(JTextField color, JRadioButton moto, JRadioButton carro, Vehiculo vehiculo){
+        
+            if (vehiculo instanceof Moto) {
+                Moto m = (Moto) vehiculo;
+                    color.setText(m.getColor());
+                    moto.setSelected(true);
+                    color.setEditable(false);
+                    moto.setEnabled(false);
+                    carro.setEnabled(false);
+                
+            } else if (vehiculo instanceof Carro) {
+                Carro c = (Carro) vehiculo;
+                    color.setText(c.getColor());
+                    carro.setSelected(true);
+                    color.setEditable(false);
+                    moto.setEnabled(false);
+                    carro.setEnabled(false);
+            }
     }
 }

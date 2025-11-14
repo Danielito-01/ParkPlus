@@ -1,5 +1,7 @@
 package DAO;
 
+import Clases.Carro;
+import Clases.Moto;
 import Clases.Vehiculo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -86,5 +88,37 @@ public class VehiculoDAO {
     }
 
     return idsVehiculos;
+    }
+    
+    public Vehiculo obtenerVehiculoPorPlaca(String placa) {
+        String sql = "SELECT placa, color, tipo FROM vehiculo WHERE placa = ?";
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, placa);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    
+                    String tipo = rs.getString("tipo");
+
+                    if ("Moto".equalsIgnoreCase(tipo)) {
+                        Vehiculo m = new Moto();
+                        m.setPlaca(rs.getString("placa"));
+                        m.setColor(rs.getString("color"));
+                        m.setTipovehiculo(tipo);  
+                        return m;
+                    } else if ("Carro".equalsIgnoreCase(tipo)) {
+                        Vehiculo c = new Carro();
+                        c.setPlaca(rs.getString("placa"));
+                        c.setColor(rs.getString("color"));
+                        c.setTipovehiculo(tipo); 
+                        return c;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener datos: " + e.getMessage());
+        }
+        return null;
     }
 }

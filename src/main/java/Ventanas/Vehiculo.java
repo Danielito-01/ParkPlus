@@ -13,6 +13,7 @@ import DAO.VehiculoDAO;
 import Gestiones.Gestion;
 import com.mycompany.parkplus.PantallaPark;
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
@@ -29,6 +30,8 @@ public class Vehiculo extends javax.swing.JDialog {
     UsuarioDAO daoU = new UsuarioDAO();
     UsuarioVehiculoDAO daoUV = new UsuarioVehiculoDAO();
     boolean vehiculoMinimo = false;
+    private PantallaPark p;
+    private String carnet;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Vehiculo.class.getName());
 
@@ -122,6 +125,17 @@ public class Vehiculo extends javax.swing.JDialog {
 
         jLabel3.setText("Placa:");
 
+        txtPlaca.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPlacaFocusLost(evt);
+            }
+        });
+        txtPlaca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPlacaActionPerformed(evt);
+            }
+        });
+
         jLabel4.setText("Color:");
 
         txtRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione Rol", "Propietario", "Tercero" }));
@@ -203,10 +217,14 @@ public class Vehiculo extends javax.swing.JDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+  
+    public void setCarnet(String carnet) {
+        this.carnet = carnet;
+    }
+    
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        String placa = txtPlaca.getText().toUpperCase();
-        String rol = txtRol.getSelectedItem().toString().toUpperCase();
+        String placa = txtPlaca.getText().toUpperCase().trim();
+        String rol = txtRol.getSelectedItem().toString().toUpperCase().trim();
                
         if (!validarCamposv()) {
         JOptionPane.showMessageDialog(this, "Por favor llene todos los campos.");
@@ -223,12 +241,19 @@ public class Vehiculo extends javax.swing.JDialog {
         String color = txtColor.getText().toUpperCase();
         String tipovehiculo;
         
+        if (daoUV.existeRol(carnet, placa)) {
+        JOptionPane.showMessageDialog(null, 
+        "Error: La placa " + placa + " ya tiene un rol para este usuario.", 
+        "Validación", 
+        JOptionPane.ERROR_MESSAGE);
+        return;
+        }
+        
         if (gestion.yaExisteVenLista(this.vehiculo, placa)) {
         JOptionPane.showMessageDialog(null, 
         "Error: La placa " + placa + " ya tiene un rol para este usuario.", 
         "Validación", 
         JOptionPane.ERROR_MESSAGE);
-    
         return;
         }
         
@@ -257,8 +282,6 @@ public class Vehiculo extends javax.swing.JDialog {
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        PantallaPark p = new PantallaPark();
-        String usuarioActual = p.getCarnet();
         ArrayList<Integer> idsV = new ArrayList<>();
         if (!vehiculoMinimo) {
             JOptionPane.showMessageDialog(this, "Por favor ingrese al menos un vehiculo");
@@ -273,7 +296,7 @@ public class Vehiculo extends javax.swing.JDialog {
         );
 
         if (respuesta == JOptionPane.YES_OPTION) {
-            int idU = daoU.obtenerId(usuarioActual);
+            int idU = daoU.obtenerId(carnet);
             if (vehiculos.size()>=1) {
                 daoV.insertarV(vehiculos);
             }
@@ -289,6 +312,24 @@ public class Vehiculo extends javax.swing.JDialog {
             return;
         }
     }//GEN-LAST:event_btnGuardarActionPerformed
+
+    private void txtPlacaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPlacaFocusLost
+       String placa = txtPlaca.getText().toUpperCase().trim();
+       if (!placa.isEmpty()) {
+           if (daoV.existeVehiculo(placa)) {
+               gestion.agregarDatosDeVehiculoAutomatico(txtColor, rbtnMoto, rbtnCarro, daoV.obtenerVehiculoPorPlaca(placa));
+            }  
+        } 
+    }//GEN-LAST:event_txtPlacaFocusLost
+
+    private void txtPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPlacaActionPerformed
+       String placa = txtPlaca.getText().toUpperCase().trim();
+       if (!placa.isEmpty()) {
+           if (daoV.existeVehiculo(placa)) {
+               gestion.agregarDatosDeVehiculoAutomatico(txtColor, rbtnMoto, rbtnCarro, daoV.obtenerVehiculoPorPlaca(placa));
+            }  
+        } 
+    }//GEN-LAST:event_txtPlacaActionPerformed
 
     private boolean validarCamposv(){
         if (txtPlaca.getText().trim().isEmpty()){
