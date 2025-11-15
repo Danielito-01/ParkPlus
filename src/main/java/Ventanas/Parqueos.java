@@ -820,7 +820,7 @@ public class Parqueos extends javax.swing.JDialog {
                         boton.setEnabled(false);
                         boton.setForeground(Color.BLACK);
                     } else {
-                        boton.setBackground(Color.GREEN);
+                        boton.setBackground(new Color(9, 143, 18));
                         boton.setEnabled(false);
                         boton.setForeground(Color.BLACK);
                     }
