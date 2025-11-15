@@ -162,4 +162,21 @@ public class VehiculoDAO {
 
         return false; // si algo falla o no encontró nada
     }
+    
+       public int contarSpotsLibresPorTipo(String tipoVehiculo) {
+            String sql = "SELECT COUNT(*) AS total_libres FROM spot WHERE estado = 0 AND tipodevehiculo = ?";
+            try (Connection conn = Conexion.Conectar();
+                 PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+                stmt.setString(1, tipoVehiculo);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getInt("total_libres");
+                }
+            } catch (SQLException e) {
+                System.err.println("Error contando spots de " + tipoVehiculo + ": " + e.getMessage());
+            }
+            return 0;
+        }
+
 }

@@ -162,7 +162,6 @@ public class ReporteDAO {
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Error al exportar: " + ex.getMessage());
-                ex.printStackTrace();
             }
         }
     }
