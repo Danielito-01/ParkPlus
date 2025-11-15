@@ -102,7 +102,6 @@ public class PantallaPark extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem10 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -404,9 +403,6 @@ public class PantallaPark extends javax.swing.JFrame {
             }
         });
         jMenu3.add(jMenuItem8);
-
-        jMenuItem10.setText("Porcentaje De Ocupacion");
-        jMenu3.add(jMenuItem10);
 
         jMenuBar1.add(jMenu3);
 
@@ -861,7 +857,6 @@ public class PantallaPark extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;

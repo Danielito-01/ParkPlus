@@ -55,7 +55,6 @@ public class Historico extends javax.swing.JDialog {
         tblHistorico.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {},
             new String [] {
-                "ID",
                 "PLACA",
                 "CARNET",
                 "TIPO USUARIO",
