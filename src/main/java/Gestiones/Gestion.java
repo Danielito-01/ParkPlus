@@ -4,10 +4,12 @@ import Clases.Carro;
 import Clases.Docente;
 import Clases.Estudiante;
 import Clases.Moto;
+import Clases.Ticket;
 import Clases.Usuario;
 import Clases.UsuarioVehiculo;
 import Clases.Vehiculo;
 import DAO.CargasDAO;
+import DAO.Conexion;
 import DAO.UsuarioDAO;
 import DAO.UsuarioVehiculoDAO;
 import DAO.VehiculoDAO;
@@ -16,6 +18,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ButtonGroup;
@@ -33,6 +41,7 @@ public class Gestion {
     private ArrayList<Usuario> cargaUsuarios = new ArrayList<>(); 
     private ArrayList<Vehiculo> cargaVehiculos = new ArrayList<>();
     private ArrayList<UsuarioVehiculo> cargaAV = new ArrayList<>();
+    private ArrayList<Ticket> tickets = new ArrayList<>();
     UsuarioVehiculoDAO uv = new UsuarioVehiculoDAO();
     UsuarioDAO daoU = new UsuarioDAO();
     VehiculoDAO daoV = new VehiculoDAO();
@@ -537,4 +546,177 @@ public class Gestion {
                     carro.setEnabled(false);
             }
     }
+    
+public void leerArchivoTickets(File archivo, Component parent) {
+    tickets.clear(); // ArrayList<Ticket>
+    int contador = 0;
+    int lineasIgnoradas = 0;
+
+    // Formato de fecha esperado en el CSV
+    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+        String linea;
+
+        while ((linea = br.readLine()) != null) {
+            if (linea.trim().isEmpty()) continue;
+
+            String[] campos = linea.split("\\|");
+
+            if (campos.length != 12) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            // Convertir todos los campos a trim y mayúsculas
+            for (int i = 0; i < campos.length; i++) {
+                campos[i] = campos[i].trim();
+            }
+
+            // Validar campos vacíos
+            boolean lineaValida = true;
+            for (String c : campos) {
+                if (c.isEmpty()) {
+                    lineaValida = false;
+                    break;
+                }
+            }
+            if (!lineaValida) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            // Validaciones de negocio (usar equalsIgnoreCase para ignorar mayúsculas/minúsculas)
+            String tipoVehiculo = campos[3];
+            if (!tipoVehiculo.equalsIgnoreCase("CARRO") && !tipoVehiculo.equalsIgnoreCase("MOTO")) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            String tipoUsuario = campos[2];
+            if (!tipoUsuario.equalsIgnoreCase("ESTUDIANTE") &&
+                !tipoUsuario.equalsIgnoreCase("DOCENTE") &&
+                !tipoUsuario.equalsIgnoreCase("INVITADO")) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            String metodoPago = campos[10];
+            if (!metodoPago.equalsIgnoreCase("TRANSFERENCIA") &&
+                !metodoPago.equalsIgnoreCase("EFECTIVO") &&
+                !metodoPago.equalsIgnoreCase("TARJETA")) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            String tarifa = campos[8];
+            double monto;
+            try {
+                monto = Double.parseDouble(campos[9]);
+            } catch (NumberFormatException ex) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            if (tarifa.equalsIgnoreCase("PLANA") && monto != 15.0) {
+                lineasIgnoradas++;
+                continue;
+            } else if (!tarifa.equalsIgnoreCase("PLANA") && !tarifa.equalsIgnoreCase("VARIABLE")) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            if (!campos[11].equalsIgnoreCase("COMPLETADO")) {
+                lineasIgnoradas++;
+                continue;
+            }
+
+            try {
+                // Parsear fechas
+                LocalDateTime ingreso = LocalDateTime.parse(campos[6], dtf);
+                LocalDateTime salida = LocalDateTime.parse(campos[7], dtf);
+
+                // Crear Ticket (id = 0 porque se genera en la BD)
+                Ticket t = new Ticket(
+                    0, // id
+                    campos[0], // PLACA
+                    campos[1], // CARNET
+                    tipoUsuario.toUpperCase(), // TIPO USUARIO
+                    tipoVehiculo.toUpperCase(), // TIPO VEHÍCULO
+                    campos[4], // SPOT
+                    campos[5], // AREA
+                    ingreso,   // INGRESO
+                    salida,    // SALIDA
+                    tarifa.toUpperCase(), // TARIFA
+                    monto,     // MONTO
+                    metodoPago.toUpperCase(), // MÉTODO
+                    campos[11].toUpperCase() // ESTADO
+                );
+
+                tickets.add(t);
+                contador++;
+
+            } catch (Exception e) {
+                lineasIgnoradas++;
+            }
+        }
+
+        JOptionPane.showMessageDialog(parent,
+                "Carga completada.\n"
+                + "Tickets válidos: " + contador
+                + "\nLíneas ignoradas: " + lineasIgnoradas,
+                "Resultado de carga",
+                JOptionPane.INFORMATION_MESSAGE);
+
+    } catch (IOException e) {
+        JOptionPane.showMessageDialog(parent,
+                "Error al leer el archivo:\n" + e.getMessage(),
+                "Error de lectura",
+                JOptionPane.ERROR_MESSAGE);
+    }
+}
+
+
+    // Getter para obtener la lista de tickets leídos
+    public ArrayList<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void insertarTicketsEnBD(ArrayList<Ticket> tickets) {
+        
+       String sql = "INSERT INTO Ticket (placaVehiculo, carnetUsuario, tipoUsuario, tipoVehiculo, codigoSpot, codigoArea, fechaHoraIngreso, fechaHoraSalida, tarifaAplicada, monto, metodoPago, estado) "
+                  + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+       try (Connection conn = Conexion.Conectar();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+
+           for (Ticket t : tickets) {
+               ps.setString(1, t.getPlacaVehiculo());
+               ps.setString(2, t.getCarnetUsuario());
+               ps.setString(3, t.getTipoUsuario());
+               ps.setString(4, t.getTipoVehiculo());
+               ps.setString(5, t.getCodigoSpot());
+               ps.setString(6, t.getCodigoArea());
+               ps.setTimestamp(7, Timestamp.valueOf(t.getFechaHoraIngreso())); // LocalDateTime -> Timestamp
+               ps.setTimestamp(8, Timestamp.valueOf(t.getFechaHoraSalida()));
+               ps.setString(9, t.getTarifaAplicada());
+               ps.setDouble(10, t.getMonto());
+               ps.setString(11, t.getMetodoPago());
+               ps.setString(12, t.getEstado());
+
+               ps.addBatch(); // Agregamos al batch para ejecución masiva
+           }
+
+           ps.executeBatch(); // Ejecuta todos los inserts
+           System.out.println("Tickets insertados correctamente: " + tickets.size());
+
+       } catch (SQLException e) {
+           e.printStackTrace();
+           JOptionPane.showMessageDialog(null,
+               "Error al insertar tickets: " + e.getMessage(),
+               "Error BD",
+               JOptionPane.ERROR_MESSAGE);
+       }
+   }
+
 }

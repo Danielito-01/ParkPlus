@@ -19,6 +19,10 @@ import Gestiones.GestionUV;
 import Ventanas.AreasSpots;
 import Ventanas.CargaAS;
 import Ventanas.CargaInterfaz;
+import Ventanas.Cierre;
+import Ventanas.Historico;
+import Ventanas.HistoricoC;
+import Ventanas.IngresoDia;
 import Ventanas.Parqueos;
 import Ventanas.UsuarioInterfaz;
 import Ventanas.UsuarioVehiculos;
@@ -90,13 +94,14 @@ public class PantallaPark extends javax.swing.JFrame {
         Usuario = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
         jMenuItem8 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
         jMenuItem10 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
@@ -344,6 +349,14 @@ public class PantallaPark extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem3);
 
+        jMenuItem12.setText("Cargar Historico");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem12);
+
         jMenuBar1.add(jMenu1);
 
         jMenu2.setText("Informacion");
@@ -368,8 +381,21 @@ public class PantallaPark extends javax.swing.JFrame {
 
         jMenu3.setText("Reportes");
 
-        jMenuItem4.setText("Cierre Del Dia");
+        jMenuItem4.setText("Cierre");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
         jMenu3.add(jMenuItem4);
+
+        jMenuItem11.setText("Historico");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem11);
 
         jMenuItem8.setText("Ingresos Diarios");
         jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
@@ -378,9 +404,6 @@ public class PantallaPark extends javax.swing.JFrame {
             }
         });
         jMenu3.add(jMenuItem8);
-
-        jMenuItem9.setText("Rango de Fechas");
-        jMenu3.add(jMenuItem9);
 
         jMenuItem10.setText("Porcentaje De Ocupacion");
         jMenu3.add(jMenuItem10);
@@ -693,9 +716,25 @@ public class PantallaPark extends javax.swing.JFrame {
             procesarSalidaVariable(t);
     }//GEN-LAST:event_btnSalidaActionPerformed
 
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        Cierre c = new Cierre(this, true);
+        c.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        Historico h = new Historico(this, true);
+        h.setVisible(true);
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
-        // TODO add your handling code here:
+        IngresoDia i = new IngresoDia(this,true);
+        i.setVisible(true);
     }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        HistoricoC h = new HistoricoC(this, true);
+        h.setVisible(true);
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
 
     private void procesarSalidaPlana(Ticket t) {
 
@@ -823,6 +862,8 @@ public class PantallaPark extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -830,7 +871,6 @@ public class PantallaPark extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JMenuItem jMenuItem8;
-    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton rbtnInvitado;
