@@ -5,13 +5,17 @@
 package Ventanas;
 
 import Clases.Spot;
+import Clases.Ticket;
+import DAO.TicketDAO;
 import Gestiones.GestionPAR;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
 import javax.swing.JToggleButton;
 
 /**
@@ -19,10 +23,16 @@ import javax.swing.JToggleButton;
  * @author dcuyu
  */
 public class Parqueos extends javax.swing.JDialog {
-    GestionPAR gestion = new GestionPAR();
+    GestionPAR gestionPAR = new GestionPAR();
     public  ArrayList<JToggleButton> espaciosMot = new ArrayList<>();
     public  ArrayList<JToggleButton> espaciosDoc = new ArrayList<>();
     public  ArrayList<JToggleButton> espaciosEst = new ArrayList<>();
+    private Spot spotSeleccionadoGlobal = null;
+    private String carnet;
+    private String placa;
+    private String tipoUsuario;
+    private String tipoVehiculo;
+    private String nombre;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Parqueos.class.getName());
 
@@ -35,8 +45,6 @@ public class Parqueos extends javax.swing.JDialog {
         EspaciosM();
         EspaciosE();
         EspaciosD();
-        crearGrupos();
-        cargarSpotsEnBotones();
     }
 
     /**
@@ -116,7 +124,7 @@ public class Parqueos extends javax.swing.JDialog {
         tbtnE15 = new javax.swing.JToggleButton();
         tbtnE19 = new javax.swing.JToggleButton();
         tbtnE20 = new javax.swing.JToggleButton();
-        jButton1 = new javax.swing.JButton();
+        btnParquear = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -672,7 +680,12 @@ public class Parqueos extends javax.swing.JDialog {
                 .addContainerGap())
         );
 
-        jButton1.setText("Confirmar");
+        btnParquear.setText("Parquear");
+        btnParquear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnParquearActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -685,26 +698,25 @@ public class Parqueos extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnParquear)
+                .addGap(406, 406, 406))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1)))
-                .addContainerGap())
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnParquear)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -734,41 +746,41 @@ public class Parqueos extends javax.swing.JDialog {
     }
     
     public void crearGrupos(){
-        ButtonGroup grupoMotos = new ButtonGroup();
-        for (JToggleButton btn : espaciosMot) {
-            grupoMotos.add(btn);
-        }
-
-        ButtonGroup grupoEst = new ButtonGroup();
-        for (JToggleButton btn : espaciosEst) {
-            grupoEst.add(btn);
-        }
-
-        ButtonGroup grupoDoc = new ButtonGroup();
-        for (JToggleButton btn : espaciosDoc) {
-            grupoDoc.add(btn);
-        }
+        ButtonGroup spots = new ButtonGroup();
+            for (JToggleButton btn : espaciosEst) {
+                spots.add(btn);
+            }
+            for (JToggleButton btn : espaciosDoc) {
+                spots.add(btn);
+            }        
+            for (JToggleButton btn : espaciosMot) {
+                spots.add(btn);
+            }
     }
     
-    
-    private void cargarSpotsEnBotones() {
-
-        GestionPAR gestion = new GestionPAR();
+    public void cargarSpotsEnBotones(String tipoUsuario, String tipoVehiculo) {
 
         // 1. áreas en un mapa codigo -> nombre
-        Map<String, String> mapaAreas = gestion.obtenerNombreAreaPorCodigo();
+        Map<String, String> mapaAreas = gestionPAR.obtenerNombreAreaPorCodigo();
 
         // 2. todos los spots desde BD
-        List<Spot> spots = gestion.obtenerTodosLosSpots();
+        List<Spot> spots = gestionPAR.obtenerTodosLosSpots();
 
         // índices para asignar botones correctamente
         int iMoto = 0;
         int iEst = 0;
         int iDoc = 0;
 
+        // 🔥 Si es GESTION, bloquear botón parquear
+        boolean esGestion = tipoUsuario.equalsIgnoreCase("GESTION") 
+                            && tipoVehiculo.equalsIgnoreCase("GESTION");
+        if (esGestion && btnParquear != null) {
+            btnParquear.setEnabled(false);
+        }
+
         for (Spot s : spots) {
 
-            String areaNombre = mapaAreas.get(s.getCodigodearea()); // Estudiantes/Motos/Docentes
+            String areaNombre = mapaAreas.get(s.getCodigodearea());
             JToggleButton boton = null;
 
             switch (areaNombre) {
@@ -789,29 +801,217 @@ public class Parqueos extends javax.swing.JDialog {
 
                 // Mostrar info
                 boton.setText("<html>" + s.getCodigo() + "<br>"
-                        + s.getTipodevehiculo() + "<br>" 
+                        + s.getTipodevehiculo() + "<br>"
                         + (s.isEstado() ? "Ocupado" : "Libre") +
                         "</html>"
                 );
 
-                // Guardar el Spot dentro del botón
                 boton.putClientProperty("spot", s);
 
-                // Cambiar color según estado
-                if (s.isEstado()) {  // ocupado
+                boton.addActionListener(e -> spotSeleccionado(e));
+
+                // -----------------------------------------
+                // 🔥 Si es GESTION → NO bloquear ningún botón
+                // -----------------------------------------
+                if (esGestion) {
+                    // Solo mostrar color normal por estado
+                    if (s.isEstado()) {
+                        boton.setBackground(Color.RED);
+                        boton.setEnabled(false);
+                        boton.setForeground(Color.BLACK);
+                    } else {
+                        boton.setBackground(Color.GREEN);
+                        boton.setEnabled(false);
+                        boton.setForeground(Color.BLACK);
+                    }
+                    continue; // ← ir al siguiente botón
+                }
+
+                // ---------- Lógica normal ----------
+                boolean habilitar = true;
+
+                if (s.isEstado()) habilitar = false;
+
+                if (tipoVehiculo.equalsIgnoreCase("MOTO")) {
+                    if (!areaNombre.equals("MOTOS")) habilitar = false;
+                } 
+                else if (tipoVehiculo.equalsIgnoreCase("CARRO")) {
+
+                    if (tipoUsuario.equalsIgnoreCase("ESTUDIANTE")) {
+                        if (!areaNombre.equals("ESTUDIANTES")) habilitar = false;
+                    } 
+                    else if (tipoUsuario.equalsIgnoreCase("DOCENTE") ||
+                             tipoUsuario.equalsIgnoreCase("INVITADO")) {
+                        if (!areaNombre.equals("ESTUDIANTES") &&
+                            !areaNombre.equals("DOCENTES")) habilitar = false;
+                    }
+                }
+
+                // Aplicar color
+                if (!habilitar) {
                     boton.setBackground(Color.RED);
-                    boton.setEnabled(false);   // no se puede seleccionar
+                    boton.setEnabled(false);
+                    boton.setForeground(Color.BLACK);
                 } else {
                     boton.setBackground(Color.GREEN);
-                    boton.setEnabled(true);    // libre y seleccionable
+                    boton.setEnabled(true);
+                    boton.setForeground(Color.BLACK);
                 }
             }
         }
+    }
+
+    
+    private void spotSeleccionado(ActionEvent e) {
+        JToggleButton btn = (JToggleButton) e.getSource();
+
+        // Obtener el spot guardado en el botón
+        Spot spot = (Spot) btn.getClientProperty("spot");
+
+        // Guardarlo para usarlo luego
+        spotSeleccionadoGlobal = spot;
+    }
+
+    public Spot getSpotSeleccionadoGlobal() {
+        return spotSeleccionadoGlobal;
     }
     
     private void tbtnM1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbtnM1ActionPerformed
         
     }//GEN-LAST:event_tbtnM1ActionPerformed
+
+    public void setCarnet(String carnet) {
+        this.carnet = carnet;
+    }
+    
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+    
+    public void setTipoUsuario(String tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
+    }
+    
+    public void setTipoVehiculo(String tipoVehiculo) {
+        this.tipoVehiculo = tipoVehiculo;
+    }
+    
+    public void setNombre(String nombre){
+        this.nombre = nombre;
+    }
+    
+    private void btnParquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParquearActionPerformed
+    Spot spot = this.spotSeleccionadoGlobal;
+        if (spot == null) {
+            JOptionPane.showMessageDialog(this, "Seleccione un spot.");
+            return;
+        }
+        String carnet;
+        String placa;
+        String tipoUsuario;
+        String tipoVehiculo;
+        
+        if ("INVITADO".equalsIgnoreCase(this.tipoUsuario)) {
+         carnet = this.nombre;
+         placa = this.tipoVehiculo;
+         tipoUsuario = this.tipoUsuario;
+         tipoVehiculo = this.tipoVehiculo;
+        } else {
+         carnet = this.carnet;
+         placa = this.placa;
+         tipoUsuario = this.tipoUsuario;
+         tipoVehiculo = this.tipoVehiculo;
+        }
+
+
+    // ---------- PASO 1: ESCOGER TIPO DE TARIFA ----------
+    String[] opciones = {"Tarifa Plana", "Tarifa Variable"};
+    String tarifaSel = (String) JOptionPane.showInputDialog(
+            this,
+            "Seleccione el tipo de tarifa:",
+            "Tipo de Tarifa",
+            JOptionPane.QUESTION_MESSAGE,
+            null,
+            opciones,
+            opciones[0]
+    );
+    if (tarifaSel == null) return; // cancelado
+
+
+
+    Ticket t = new Ticket();
+    t.setPlacaVehiculo(placa);
+    t.setCarnetUsuario(carnet);
+    t.setTipoUsuario(tipoUsuario);
+    t.setTipoVehiculo(tipoVehiculo);
+    t.setCodigoSpot(spot.getCodigo());
+    t.setCodigoArea(spot.getCodigodearea());
+    t.setFechaHoraIngreso(LocalDateTime.now());
+
+
+    // ---------- PASO 2: TARIFA PLANA ----------
+    if (tarifaSel.equals("Tarifa Plana")) {
+
+        // método de pago
+        String[] metodos = {"Efectivo", "Tarjeta", "Transferencia"};
+        String metodoPago = (String) JOptionPane.showInputDialog(
+                this,
+                "Seleccione método de pago:",
+                "Método de Pago",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                metodos,
+                metodos[0]
+        );
+        if (metodoPago == null) return;
+
+        double montoFijo = 15.00;
+
+        t.setTarifaAplicada("PLANA");
+        t.setMonto(montoFijo);
+        t.setMetodoPago(metodoPago);
+        t.setEstado("ACTIVO");
+
+    } 
+    // ---------- PASO 3: TARIFA VARIABLE ----------
+    else if (tarifaSel.equals("Tarifa Variable")) {
+
+        t.setTarifaAplicada("VARIABLE");
+        t.setMonto(0);
+        t.setMetodoPago("PENDIENTE");
+        t.setEstado("PENDIENTE");
+    }
+
+
+
+    // ---------- PASO 4: GUARDAR EN BD ----------
+    TicketDAO dao = new TicketDAO();
+    boolean ok = dao.insertarTicketYMarcarSpot(t, spot.getCodigo());
+
+    if (!ok) {
+        JOptionPane.showMessageDialog(this, "Error al registrar la entrada.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }  
+    
+    String resumen =
+        "Ticket registrado\n\n" +
+        "Ticket: " + t.getId() + "\n" +
+        "Placa: " + t.getPlacaVehiculo() + "\n" +
+        "Carnet: " + t.getCarnetUsuario() + "\n" +
+        "Usuario: " + t.getTipoUsuario() + "\n" +
+        "Vehículo: " + t.getTipoVehiculo() + "\n" +
+        "Spot: " + t.getCodigoSpot() + "\n" +
+        "Área: " + t.getCodigoArea() + "\n" +
+        "Tarifa: " + t.getTarifaAplicada() + "\n" +
+        "Monto: Q" + t.getMonto() + "\n" +
+        "Método Pago: " + t.getMetodoPago() + "\n" +
+        "Estado: " + t.getEstado() + "\n" +
+        "Hora Ingreso: " + t.getFechaHoraIngreso().toString();
+
+    JOptionPane.showMessageDialog(this, resumen, "Ticket Generado", JOptionPane.INFORMATION_MESSAGE);
+    this.dispose();
+        
+    }//GEN-LAST:event_btnParquearActionPerformed
 
     /**
      * @param args the command line arguments
@@ -851,7 +1051,7 @@ public class Parqueos extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnParquear;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

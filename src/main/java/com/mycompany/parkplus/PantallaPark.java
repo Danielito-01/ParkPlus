@@ -6,8 +6,11 @@ package com.mycompany.parkplus;
 
 import Clases.Docente;
 import Clases.Estudiante;
+import Clases.Ticket;
 import Clases.Usuario;
+import DAO.TicketDAO;
 import DAO.UsuarioDAO;
+import DAO.VehiculoDAO;
 import Gestiones.Gestion;
 import Gestiones.GestionAS;
 import Gestiones.GestionUV;
@@ -19,8 +22,8 @@ import Ventanas.UsuarioInterfaz;
 import Ventanas.UsuarioVehiculos;
 import Ventanas.Vehiculo;
 import java.awt.event.ItemEvent;
-import java.util.ArrayList;
-import java.util.HashSet;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -32,8 +35,10 @@ public class PantallaPark extends javax.swing.JFrame {
     GestionAS gestionAS = new GestionAS();
     GestionUV gestionUV = new GestionUV();
     UsuarioDAO daoU = new UsuarioDAO();
+    VehiculoDAO daoV = new VehiculoDAO();
     Gestion gestion = new Gestion();
-    
+    boolean usuarioCargado = false;
+    Parqueos p;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaPark.class.getName());
 
     /**
@@ -54,21 +59,29 @@ public class PantallaPark extends javax.swing.JFrame {
 
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
+        jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         txtCarnet = new javax.swing.JTextField();
         txtNombre = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        cmbxPlaca = new javax.swing.JComboBox<>();
-        txtnoestalaplaca = new javax.swing.JLabel();
-        txtregistrarvehiculo = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtUsuario = new javax.swing.JTextField();
         rbtnInvitado = new javax.swing.JRadioButton();
         jLabel7 = new javax.swing.JLabel();
-        txtTipo = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        txtVehiculo = new javax.swing.JTextField();
+        cmbxPlaca = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        txtnoestalaplaca = new javax.swing.JLabel();
+        txtregistrarvehiculo = new javax.swing.JLabel();
+        btnEntrada = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtTicket = new javax.swing.JTextField();
+        btnSalida = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         Usuario = new javax.swing.JMenuItem();
@@ -86,20 +99,15 @@ public class PantallaPark extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
+
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel1.setText("Parquear");
-
-        jLabel2.setText("Carnet:");
-
-        jLabel3.setText("Nombre:");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setText("Usuario:");
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setText("Vehiculo:");
-
-        jLabel6.setText("Placa:");
+        jLabel2.setText("Carnet:");
 
         txtCarnet.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -119,12 +127,33 @@ public class PantallaPark extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("Buscar espacio");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        jLabel3.setText("Nombre:");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setText("Vehiculo:");
+
+        txtUsuario.setEditable(false);
+
+        rbtnInvitado.setText("Invitado");
+        rbtnInvitado.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                rbtnInvitadoItemStateChanged(evt);
             }
         });
+
+        jLabel7.setText("Usuario:");
+
+        jLabel9.setText("Tipo:");
+
+        txtVehiculo.setEditable(false);
+
+        cmbxPlaca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbxPlacaActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText("Placa:");
 
         txtnoestalaplaca.setText("No esta la placa?");
         txtnoestalaplaca.setVisible(false);
@@ -138,16 +167,145 @@ public class PantallaPark extends javax.swing.JFrame {
             }
         });
 
-        rbtnInvitado.setText("Invitado");
-        rbtnInvitado.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                rbtnInvitadoItemStateChanged(evt);
+        btnEntrada.setText("Entrada");
+        btnEntrada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEntradaActionPerformed(evt);
             }
         });
 
-        jLabel7.setText("Tipo:");
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)
+                        .addGap(223, 223, 223))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(381, 381, 381)
+                            .addComponent(rbtnInvitado))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(txtVehiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel3))
+                                        .addGap(15, 15, 15)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(21, 21, 21))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cmbxPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(txtnoestalaplaca)
+                                        .addGap(11, 11, 11)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(17, 17, 17)
+                                        .addComponent(txtregistrarvehiculo)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnEntrada)))))))
+                .addContainerGap(9, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(rbtnInvitado))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtVehiculo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(cmbxPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtnoestalaplaca)
+                    .addComponent(txtregistrarvehiculo)
+                    .addComponent(btnEntrada))
+                .addGap(19, 19, 19))
+        );
 
-        txtTipo.setEditable(false);
+        jPanel2.setBackground(new java.awt.Color(255, 255, 204));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel8.setText("Salida");
+
+        jLabel10.setText("Ticket:");
+
+        btnSalida.setText("Salida");
+        btnSalida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalidaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(245, Short.MAX_VALUE)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(219, 219, 219))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTicket, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnSalida, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(txtTicket, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSalida))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
 
         jMenu1.setText("Menu");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
@@ -214,78 +372,21 @@ public class PantallaPark extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(234, 234, 234))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(381, 381, 381)
-                            .addComponent(rbtnInvitado))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmbxPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtnoestalaplaca)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtregistrarvehiculo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, Short.MAX_VALUE)
-                                .addComponent(jButton1))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtCarnet)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                .addContainerGap(12, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(11, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(rbtnInvitado))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(txtTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtnoestalaplaca)
-                        .addComponent(txtregistrarvehiculo)
-                        .addComponent(jButton1))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6)
-                        .addComponent(cmbxPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(8, 8, 8))
         );
 
         pack();
@@ -313,11 +414,70 @@ public class PantallaPark extends javax.swing.JFrame {
         CargaAS c = new CargaAS(this, true);
         c.setVisible(true);
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+    
+    public String getCarnet(){
+        return txtCarnet.getText().toUpperCase().trim();
+    }   
+    
+    public String getPlaca() {
+        Object item = cmbxPlaca.getSelectedItem();
+        if (item != null) {
+            return item.toString().trim();
+        } else {
+            return "";
+        }
+    }
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    public String getTipoUsuario(){
+        return txtUsuario.getText().toUpperCase().trim();
+    }
+    
+    public String getTipoVehiculo(){
+        return txtVehiculo.getText().toUpperCase().trim();
+    }
+    
+    public String getNombre(){
+        return txtNombre.getText().toUpperCase().trim();
+    }
+    
+    private void btnEntradaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntradaActionPerformed
         Parqueos p = new Parqueos(this, true);
+        p.crearGrupos();
+        if (!rbtnInvitado.isSelected()) {
+            if (usuarioCargado) {
+                if (daoV.VehiculoEnParqueo(cmbxPlaca.getSelectedItem().toString())) {
+                    JOptionPane.showMessageDialog(this,"El vehiculo ya se encuentra en el parqueo");
+                return;
+                } else {
+                    String carnet = txtCarnet.getText();
+                    String placa = cmbxPlaca.getSelectedItem().toString();
+                    String tipoVehiculo = daoV.obtenerTipoVehiculoPorPlaca(placa);
+                    String tipoUsuario = daoU.obtenerTipoUsuarioPorCarnet(carnet);
+                    p.cargarSpotsEnBotones(tipoUsuario, tipoVehiculo);
+                    p.setCarnet(getCarnet()); p.setPlaca(getPlaca()); p.setTipoUsuario(getTipoUsuario()); p.setTipoVehiculo(getTipoVehiculo());                     
+                }
+            } else {
+                JOptionPane.showMessageDialog(this,"Ingrese el carnet del usuario y presion ENTER \n O ingrese como Invitado");
+                return;
+            } 
+        }
+        if (rbtnInvitado.isSelected()) {
+            if (txtNombre.getText().isEmpty() || txtVehiculo.getText().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Ingrese el nombre y placa del vehiculo del invitado.");
+                return;
+            } else if(!txtVehiculo.getText().equalsIgnoreCase("Carro") && !txtVehiculo.getText().equalsIgnoreCase("Moto") ) {
+                      JOptionPane.showMessageDialog(this, "Ingrese un tipo de vehiculo valido: \n 'Carro' o 'Moto'");
+                      return;
+            }else {
+                String tipoVehiculo = txtVehiculo.getText().toUpperCase().trim();
+                String tipoUsuario = txtUsuario.getText().toUpperCase().trim();
+                p.cargarSpotsEnBotones(tipoUsuario, tipoVehiculo);
+                p.setCarnet(getCarnet()); p.setPlaca(getPlaca()); p.setTipoUsuario(getTipoUsuario()); p.setTipoVehiculo(getTipoVehiculo()); p.setNombre(getNombre());
+            }
+        }
+        
         p.setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnEntradaActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         AreasSpots a = new AreasSpots(this,true);
@@ -334,10 +494,6 @@ public class PantallaPark extends javax.swing.JFrame {
         uv.setVisible(true);     
     }//GEN-LAST:event_jMenuItem6ActionPerformed
     
-    public String getCarnet(){
-        return txtCarnet.getText().toUpperCase().trim();
-    }
-    
     private void txtCarnetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCarnetFocusLost
         String carnet = txtCarnet.getText().toUpperCase().trim();
         
@@ -348,6 +504,7 @@ public class PantallaPark extends javax.swing.JFrame {
                         "No existe ningun usuario con el carnet ingresado \n Regístrelo en Menu, Nuevo usuario. \n Tambien puede continuar como Invitado");
                     txtCarnet.setText("");
                     txtCarnet.requestFocusInWindow();
+                    usuarioCargado = false;
                     return;
                 } else {
                     Usuario usuario;
@@ -355,15 +512,15 @@ public class PantallaPark extends javax.swing.JFrame {
                     if (usuario instanceof Estudiante) {
                         Estudiante e = (Estudiante) usuario;
                         txtNombre.setText(e.getNombre()+" "+e.getApellido());
-                        txtTipo.setText(e.getTipousuario());     
+                        txtUsuario.setText(e.getTipousuario());     
                     } else if (usuario instanceof Docente) {
                         Docente d = (Docente) usuario;
                         txtNombre.setText(d.getNombre()+" "+d.getApellido());
-                        txtTipo.setText(d.getTipousuario());                         
+                        txtUsuario.setText(d.getTipousuario());                         
                     }
                     rbtnInvitado.setEnabled(false);
                     cargarPlacas(carnet);
-
+                    usuarioCargado = true;
                     new javax.swing.Timer(3000, e -> {
                         txtnoestalaplaca.setVisible(true); 
                         txtregistrarvehiculo.setVisible(true); 
@@ -380,10 +537,12 @@ public class PantallaPark extends javax.swing.JFrame {
             } else {
                 rbtnInvitado.setEnabled(true);
                 txtNombre.setText("");
-                txtTipo.setText("");
+                txtUsuario.setText("");
+                txtVehiculo.setText("");
                 cmbxPlaca.removeAllItems();
                 txtnoestalaplaca.setVisible(false); 
                 txtregistrarvehiculo.setVisible(false);
+                usuarioCargado = false;
             } 
         }  
     }//GEN-LAST:event_txtCarnetFocusLost
@@ -406,6 +565,7 @@ public class PantallaPark extends javax.swing.JFrame {
                         "No existe ningun usuario con el carnet ingresado \n Regístrelo en Menu, Nuevo usuario. \n Tambien puede continuar como Invitado");
                     txtCarnet.setText("");
                     txtCarnet.requestFocusInWindow();
+                    usuarioCargado = false;
                     return;
                 } else {
                     Usuario usuario;
@@ -413,15 +573,15 @@ public class PantallaPark extends javax.swing.JFrame {
                     if (usuario instanceof Estudiante) {
                         Estudiante e = (Estudiante) usuario;
                         txtNombre.setText(e.getNombre()+" "+e.getApellido());
-                        txtTipo.setText(e.getTipousuario());     
+                        txtUsuario.setText(e.getTipousuario());     
                     } else if (usuario instanceof Docente) {
                         Docente d = (Docente) usuario;
                         txtNombre.setText(d.getNombre()+" "+d.getApellido());
-                        txtTipo.setText(d.getTipousuario());                         
+                        txtUsuario.setText(d.getTipousuario());                         
                     }
                     rbtnInvitado.setEnabled(false);
                     cargarPlacas(carnet);
-
+                    usuarioCargado = true;
                     new javax.swing.Timer(3000, e -> {
                         txtnoestalaplaca.setVisible(true); 
                         txtregistrarvehiculo.setVisible(true); 
@@ -438,10 +598,12 @@ public class PantallaPark extends javax.swing.JFrame {
             } else {
                 rbtnInvitado.setEnabled(true);
                 txtNombre.setText("");
-                txtTipo.setText("");
+                txtUsuario.setText("");
+                txtVehiculo.setText("");
                 cmbxPlaca.removeAllItems();
                 txtnoestalaplaca.setVisible(false); 
                 txtregistrarvehiculo.setVisible(false);
+                usuarioCargado = false;
             } 
         }  
     }//GEN-LAST:event_txtCarnetActionPerformed
@@ -466,17 +628,130 @@ public class PantallaPark extends javax.swing.JFrame {
                 txtNombre.requestFocusInWindow();
                 txtnoestalaplaca.setVisible(false); 
                 txtregistrarvehiculo.setVisible(false);
-                txtTipo.setText("INVITADO");
+                txtUsuario.setText("INVITADO");
+                txtVehiculo.setText("");
+                txtVehiculo.setEditable(true);
             } else if (evt.getStateChange() == ItemEvent.DESELECTED) {
                 txtNombre.setEditable(false);
                 txtCarnet.setEditable(true);
                 cmbxPlaca.setEnabled(true);  
                 txtCarnet.requestFocusInWindow();
-                txtTipo.setText("");
+                txtUsuario.setText("");
+                txtVehiculo.setEditable(false);
             }
         }
     }//GEN-LAST:event_rbtnInvitadoItemStateChanged
 
+    private void cmbxPlacaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbxPlacaActionPerformed
+        if (cmbxPlaca.getSelectedIndex() > -1) {
+            String placa = cmbxPlaca.getSelectedItem().toString();
+            String tipo = daoV.obtenerTipoVehiculoPorPlaca(placa);
+            txtVehiculo.setText(tipo);
+        }
+    }//GEN-LAST:event_cmbxPlacaActionPerformed
+
+    private void btnSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalidaActionPerformed
+        int id = Integer.parseInt(txtTicket.getText());
+        TicketDAO dao = new TicketDAO();
+        Ticket t = dao.getTicketPorId(id);
+
+        // 1. Validar existencia
+        if (t == null) {
+            JOptionPane.showMessageDialog(this, "El ticket no existe.");
+            return;
+        }
+
+        // 2. Validar estado
+        if (!t.getEstado().equalsIgnoreCase("ACTIVO") &&
+            !t.getEstado().equalsIgnoreCase("PENDIENTE")) {
+            JOptionPane.showMessageDialog(this, "El ticket ya está cerrado.");
+            return;
+        }
+
+        // 3. Tarifa
+        String tarifa = t.getTarifaAplicada();
+
+        if (tarifa.equalsIgnoreCase("PLANA")) {
+            procesarSalidaPlana(t);
+        } else {
+            procesarSalidaVariable(t);
+        }
+    }//GEN-LAST:event_btnSalidaActionPerformed
+
+    private void procesarSalidaPlana(Ticket t) {
+
+        int opc = JOptionPane.showConfirmDialog(this,
+            "La tarifa es PLANA.\n Si sale su ticket quedara completado \n para ingresar nuevamente debera pagar \n¿Confirmar salida?",
+            "Confirmar",
+            JOptionPane.YES_NO_OPTION);
+
+        if (opc != JOptionPane.YES_OPTION) return;
+
+        // Datos fijos para tarifa plana:
+        t.setFechaHoraSalida(LocalDateTime.now());
+        t.setMonto(15.00);  // si tienes un monto fijo
+        t.setMetodoPago("EFECTIVO");      // o abre un JDialog para elegir
+        t.setEstado("COMPLETADO");
+
+        TicketDAO dao = new TicketDAO();
+
+        if (dao.actualizarTicketSalida(t)) {
+            JOptionPane.showMessageDialog(this,
+                generarDetalleTicket(t),
+                "Salida registrada",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private void procesarSalidaVariable(Ticket t) {
+
+        LocalDateTime ahora = LocalDateTime.now();
+
+        long minutos = Duration.between(t.getFechaHoraIngreso(), ahora).toMinutes();
+
+        double costo = calcularMontoVariable(minutos); // tu método
+
+        String metodo = JOptionPane.showInputDialog(
+            this,
+            "Tiempo: " + minutos + " min\nMonto: Q" + costo +
+            "\nIngrese método de pago (EFECTIVO/TARJETA):"
+        );
+
+        if (metodo == null) return;
+
+        t.setFechaHoraSalida(ahora);
+        t.setMonto(costo);
+        t.setMetodoPago(metodo.toUpperCase());
+        t.setEstado("COMPLETADO");
+
+        TicketDAO dao = new TicketDAO();
+
+        if (dao.actualizarTicketSalida(t)) {
+            JOptionPane.showMessageDialog(this,
+                generarDetalleTicket(t),
+                "Salida registrada",
+                JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    private String generarDetalleTicket(Ticket t) {
+        return "TICKET #" + t.getId() + "\n"
+            + "Placa: " + t.getPlacaVehiculo() + "\n"
+            + "Tipo Vehículo: " + t.getTipoVehiculo() + "\n"
+            + "Ingreso: " + t.getFechaHoraIngreso() + "\n"
+            + "Salida: " + t.getFechaHoraSalida() + "\n"
+            + "Tarifa: " + t.getTarifaAplicada() + "\n"
+            + "Monto: Q" + t.getMonto() + "\n"
+            + "Método de pago: " + t.getMetodoPago() + "\n"
+            + "Estado: " + t.getEstado();
+    }
+
+    double calcularMontoVariable(long minutos) {
+        double tarifaPorMinuto = 0.10;
+        double monto = minutos * tarifaPorMinuto;
+        return Math.min(monto, 15);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -504,15 +779,19 @@ public class PantallaPark extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem Usuario;
+    private javax.swing.JButton btnEntrada;
+    private javax.swing.JButton btnSalida;
     private javax.swing.JComboBox<String> cmbxPlaca;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
@@ -524,10 +803,14 @@ public class PantallaPark extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton rbtnInvitado;
     private javax.swing.JTextField txtCarnet;
     private javax.swing.JTextField txtNombre;
-    private javax.swing.JTextField txtTipo;
+    private javax.swing.JTextField txtTicket;
+    private javax.swing.JTextField txtUsuario;
+    private javax.swing.JTextField txtVehiculo;
     private javax.swing.JLabel txtnoestalaplaca;
     private javax.swing.JLabel txtregistrarvehiculo;
     // End of variables declaration//GEN-END:variables

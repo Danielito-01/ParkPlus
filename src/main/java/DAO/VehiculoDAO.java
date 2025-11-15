@@ -121,4 +121,45 @@ public class VehiculoDAO {
         }
         return null;
     }
+    
+    public String obtenerTipoVehiculoPorPlaca(String placa) {
+        String sql = "SELECT tipo FROM vehiculo WHERE placa = ?";
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, placa);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {  
+                    String tipo = rs.getString("tipo");
+                    return tipo;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener datos: " + e.getMessage());
+        }
+        return null;
+    }
+    
+    public boolean VehiculoEnParqueo(String placa) {
+        String sql = "SELECT COUNT(*) FROM ticket "
+                   + "WHERE placaVehiculo = ? "
+                   + "AND (estado = 'ACTIVO' OR estado = 'PENDIENTE')";
+
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, placa);
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count > 0;  // true si ya está adentro
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false; // si algo falla o no encontró nada
+    }
 }

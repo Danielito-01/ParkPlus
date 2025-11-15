@@ -97,10 +97,7 @@ public class Vehiculo extends javax.swing.JDialog {
 
         tablaVehiculos.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
                 "PLACA", "COLOR", "TIPO DE VEHICULO", "ROL"

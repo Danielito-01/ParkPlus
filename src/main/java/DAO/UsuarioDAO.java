@@ -180,4 +180,21 @@ public class UsuarioDAO {
         }
         return null;
     }
+    public String obtenerTipoUsuarioPorCarnet(String carnet) {
+        String sql = "SELECT tipoUsuario FROM usuario WHERE carnet = ?";
+        try (Connection conn = Conexion.Conectar();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, carnet);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {  
+                    String tipo = rs.getString("tipoUsuario");
+                    return tipo;
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al obtener datos: " + e.getMessage());
+        }
+        return null;
+    }
 }
