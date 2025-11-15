@@ -207,9 +207,6 @@ public class PantallaPark extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -255,7 +252,11 @@ public class PantallaPark extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                             .addComponent(jlCarro, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
                                             .addComponent(jlMoto, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(9, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGap(223, 223, 223))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -567,7 +568,10 @@ public class PantallaPark extends javax.swing.JFrame {
     
     private void txtCarnetFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCarnetFocusLost
         String carnet = txtCarnet.getText().toUpperCase().trim();
-        
+        int m = daoV.contarSpotsLibresPorTipo("MOTO");
+        int c = daoV.contarSpotsLibresPorTipo("CARRO");
+        jlMoto.setText("Motos: " + m);
+        jlCarro.setText("Carros: " + c);
         if (!rbtnInvitado.isSelected()) {
             if (!carnet.isEmpty()) {
                 if (!daoU.existeCarnet(carnet)) {
@@ -628,7 +632,10 @@ public class PantallaPark extends javax.swing.JFrame {
 
     private void txtCarnetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCarnetActionPerformed
         String carnet = txtCarnet.getText().toUpperCase().trim();
-        
+        int m = daoV.contarSpotsLibresPorTipo("MOTO");
+        int c = daoV.contarSpotsLibresPorTipo("CARRO");
+        jlMoto.setText("Motos: " + m);
+        jlCarro.setText("Carros: " + c);
         if (!rbtnInvitado.isSelected()) {
             if (!carnet.isEmpty()) {
                 if (!daoU.existeCarnet(carnet)) {
