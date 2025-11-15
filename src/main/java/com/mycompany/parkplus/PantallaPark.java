@@ -4,8 +4,10 @@
  */
 package com.mycompany.parkplus;
 
+import Clases.ConfigTarifas;
 import Clases.Docente;
 import Clases.Estudiante;
+import Clases.TarifaCalculator;
 import Clases.Ticket;
 import Clases.Usuario;
 import DAO.TicketDAO;
@@ -38,6 +40,7 @@ public class PantallaPark extends javax.swing.JFrame {
     VehiculoDAO daoV = new VehiculoDAO();
     Gestion gestion = new Gestion();
     boolean usuarioCargado = false;
+    TicketDAO dao = new TicketDAO();
     Parqueos p;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(PantallaPark.class.getName());
 
@@ -88,10 +91,13 @@ public class PantallaPark extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -314,7 +320,7 @@ public class PantallaPark extends javax.swing.JFrame {
             }
         });
 
-        Usuario.setText("Nuevo usuario");
+        Usuario.setText("Nuevo Usuario");
         Usuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 UsuarioActionPerformed(evt);
@@ -322,7 +328,7 @@ public class PantallaPark extends javax.swing.JFrame {
         });
         jMenu1.add(Usuario);
 
-        jMenuItem2.setText("Cargar datos");
+        jMenuItem2.setText("Cargar Datos");
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -330,7 +336,7 @@ public class PantallaPark extends javax.swing.JFrame {
         });
         jMenu1.add(jMenuItem2);
 
-        jMenuItem3.setText("Cargar areas y spot");
+        jMenuItem3.setText("Cargar Areas y Spots");
         jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem3ActionPerformed(evt);
@@ -342,10 +348,7 @@ public class PantallaPark extends javax.swing.JFrame {
 
         jMenu2.setText("Informacion");
 
-        jMenuItem4.setText("Parqueo");
-        jMenu2.add(jMenuItem4);
-
-        jMenuItem5.setText("Areas y spots");
+        jMenuItem5.setText("Areas y Spots");
         jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem5ActionPerformed(evt);
@@ -353,7 +356,7 @@ public class PantallaPark extends javax.swing.JFrame {
         });
         jMenu2.add(jMenuItem5);
 
-        jMenuItem6.setText("Usuarios y vehiculos");
+        jMenuItem6.setText("Usuarios y Vehiculos");
         jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem6ActionPerformed(evt);
@@ -364,6 +367,24 @@ public class PantallaPark extends javax.swing.JFrame {
         jMenuBar1.add(jMenu2);
 
         jMenu3.setText("Reportes");
+
+        jMenuItem4.setText("Cierre Del Dia");
+        jMenu3.add(jMenuItem4);
+
+        jMenuItem8.setText("Ingresos Diarios");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem8);
+
+        jMenuItem9.setText("Rango de Fechas");
+        jMenu3.add(jMenuItem9);
+
+        jMenuItem10.setText("Porcentaje De Ocupacion");
+        jMenu3.add(jMenuItem10);
+
         jMenuBar1.add(jMenu3);
 
         setJMenuBar(jMenuBar1);
@@ -651,107 +672,111 @@ public class PantallaPark extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbxPlacaActionPerformed
 
     private void btnSalidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalidaActionPerformed
-        int id = Integer.parseInt(txtTicket.getText());
+     int id = Integer.parseInt(txtTicket.getText());
         TicketDAO dao = new TicketDAO();
         Ticket t = dao.getTicketPorId(id);
 
-        // 1. Validar existencia
         if (t == null) {
             JOptionPane.showMessageDialog(this, "El ticket no existe.");
             return;
         }
 
-        // 2. Validar estado
         if (!t.getEstado().equalsIgnoreCase("ACTIVO") &&
             !t.getEstado().equalsIgnoreCase("PENDIENTE")) {
             JOptionPane.showMessageDialog(this, "El ticket ya está cerrado.");
             return;
         }
 
-        // 3. Tarifa
-        String tarifa = t.getTarifaAplicada();
-
-        if (tarifa.equalsIgnoreCase("PLANA")) {
+        if (t.getTarifaAplicada().equalsIgnoreCase("PLANA"))
             procesarSalidaPlana(t);
-        } else {
+        else
             procesarSalidaVariable(t);
-        }
     }//GEN-LAST:event_btnSalidaActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void procesarSalidaPlana(Ticket t) {
 
-        int opc = JOptionPane.showConfirmDialog(this,
-            "La tarifa es PLANA.\n Si sale su ticket quedara completado \n para ingresar nuevamente debera pagar \n¿Confirmar salida?",
-            "Confirmar",
-            JOptionPane.YES_NO_OPTION);
+        int op = JOptionPane.showConfirmDialog(
+            this,
+            "El usuario ya pagó la tarifa plana.\n¿Desea cerrar el ticket y liberar el spot?",
+            "Confirmar salida",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
 
-        if (opc != JOptionPane.YES_OPTION) return;
+        if (op != JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(this, "Salida cancelada.");
+            return;
+        }
 
-        // Datos fijos para tarifa plana:
+        // Confirmado: cerrar ticket
         t.setFechaHoraSalida(LocalDateTime.now());
-        t.setMonto(15.00);  // si tienes un monto fijo
-        t.setMetodoPago("EFECTIVO");      // o abre un JDialog para elegir
-        t.setEstado("COMPLETADO");
+        t.setEstado("CERRADO");
 
         TicketDAO dao = new TicketDAO();
+        boolean ok = dao.actualizarTicketYLiberarSpot(t);
 
-        if (dao.actualizarTicketSalida(t)) {
-            JOptionPane.showMessageDialog(this,
-                generarDetalleTicket(t),
-                "Salida registrada",
-                JOptionPane.INFORMATION_MESSAGE);
+        if (!ok) {
+            JOptionPane.showMessageDialog(this, "Error al cerrar ticket.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
+
+        String resumen =
+            "Salida procesada correctamente\n\n" +
+            "Ticket: " + t.getId() + "\n" +
+            "Tarifa: PLANA (ya pagada)" + "\n" +
+            "Spot liberado." + "\n" +
+            "Hora salida: " + t.getFechaHoraSalida();
+
+        JOptionPane.showMessageDialog(this, resumen, "Ticket Cerrado", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void procesarSalidaVariable(Ticket t) {
 
-        LocalDateTime ahora = LocalDateTime.now();
+        t.setFechaHoraSalida(LocalDateTime.now());
 
-        long minutos = Duration.between(t.getFechaHoraIngreso(), ahora).toMinutes();
+        double monto = TarifaCalculator.calcular(t);
 
-        double costo = calcularMontoVariable(minutos); // tu método
-
-        String metodo = JOptionPane.showInputDialog(
-            this,
-            "Tiempo: " + minutos + " min\nMonto: Q" + costo +
-            "\nIngrese método de pago (EFECTIVO/TARJETA):"
+        String[] metodos = {"EFECTIVO", "TARJETA", "TRANSFERENCIA"};
+        String metodoPago = (String) JOptionPane.showInputDialog(
+                this,
+                "Monto a pagar: Q" + monto + "\nSeleccione método de pago:",
+                "Pago",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                metodos,
+                metodos[0]
         );
 
-        if (metodo == null) return;
+        if (metodoPago == null) return;
 
-        t.setFechaHoraSalida(ahora);
-        t.setMonto(costo);
-        t.setMetodoPago(metodo.toUpperCase());
+        t.setMonto(monto);
+        t.setMetodoPago(metodoPago);
         t.setEstado("COMPLETADO");
 
         TicketDAO dao = new TicketDAO();
+        dao.actualizarTicketYLiberarSpot(t);
 
-        if (dao.actualizarTicketSalida(t)) {
-            JOptionPane.showMessageDialog(this,
-                generarDetalleTicket(t),
-                "Salida registrada",
-                JOptionPane.INFORMATION_MESSAGE);
-        }
+        mostrarResumenSalida(t);
     }
 
-    private String generarDetalleTicket(Ticket t) {
-        return "TICKET #" + t.getId() + "\n"
-            + "Placa: " + t.getPlacaVehiculo() + "\n"
-            + "Tipo Vehículo: " + t.getTipoVehiculo() + "\n"
-            + "Ingreso: " + t.getFechaHoraIngreso() + "\n"
-            + "Salida: " + t.getFechaHoraSalida() + "\n"
-            + "Tarifa: " + t.getTarifaAplicada() + "\n"
-            + "Monto: Q" + t.getMonto() + "\n"
-            + "Método de pago: " + t.getMetodoPago() + "\n"
-            + "Estado: " + t.getEstado();
+    private void mostrarResumenSalida(Ticket t) {
+        String msg =
+            "Ticket: " + t.getId() + "\n" +
+            "Placa: " + t.getPlacaVehiculo() + "\n" +
+            "Ingreso: " + t.getFechaHoraIngreso() + "\n" +
+            "Salida: " + t.getFechaHoraSalida() + "\n" +
+            "Tarifa: " + t.getTarifaAplicada() + "\n" +
+            "Monto: Q" + t.getMonto() + "\n" +
+            "Pago: " + t.getMetodoPago() + "\n" +
+            "Estado: FINALIZADO";
+
+        JOptionPane.showMessageDialog(this, msg, "Salida Procesada", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    double calcularMontoVariable(long minutos) {
-        double tarifaPorMinuto = 0.10;
-        double monto = minutos * tarifaPorMinuto;
-        return Math.min(monto, 15);
-    }
-    
     /**
      * @param args the command line arguments
      */
@@ -797,12 +822,15 @@ public class PantallaPark extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JRadioButton rbtnInvitado;

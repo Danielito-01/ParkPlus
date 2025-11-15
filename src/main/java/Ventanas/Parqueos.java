@@ -4,6 +4,7 @@
  */
 package Ventanas;
 
+import Clases.ConfigTarifas;
 import Clases.Spot;
 import Clases.Ticket;
 import DAO.TicketDAO;
@@ -902,29 +903,27 @@ public class Parqueos extends javax.swing.JDialog {
     
     private void btnParquearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnParquearActionPerformed
     Spot spot = this.spotSeleccionadoGlobal;
-        if (spot == null) {
-            JOptionPane.showMessageDialog(this, "Seleccione un spot.");
-            return;
-        }
-        String carnet;
-        String placa;
-        String tipoUsuario;
-        String tipoVehiculo;
-        
-        if ("INVITADO".equalsIgnoreCase(this.tipoUsuario)) {
-         carnet = this.nombre;
-         placa = this.tipoVehiculo;
-         tipoUsuario = this.tipoUsuario;
-         tipoVehiculo = this.tipoVehiculo;
-        } else {
-         carnet = this.carnet;
-         placa = this.placa;
-         tipoUsuario = this.tipoUsuario;
-         tipoVehiculo = this.tipoVehiculo;
-        }
+    if (spot == null) {
+        JOptionPane.showMessageDialog(this, "Seleccione un spot.");
+        return;
+    }
 
+    String carnet, placa, tipoUsuario, tipoVehiculo;
 
-    // ---------- PASO 1: ESCOGER TIPO DE TARIFA ----------
+    // Invitado
+    if ("INVITADO".equalsIgnoreCase(this.tipoUsuario)) {
+        carnet = this.nombre;
+        placa = this.tipoVehiculo;
+        tipoUsuario = "INVITADO";
+        tipoVehiculo = this.tipoVehiculo;
+    } else {
+        carnet = this.carnet;
+        placa = this.placa;
+        tipoUsuario = this.tipoUsuario;
+        tipoVehiculo = this.tipoVehiculo;
+    }
+
+    // Selección tipo tarifa
     String[] opciones = {"Tarifa Plana", "Tarifa Variable"};
     String tarifaSel = (String) JOptionPane.showInputDialog(
             this,
@@ -935,9 +934,8 @@ public class Parqueos extends javax.swing.JDialog {
             opciones,
             opciones[0]
     );
-    if (tarifaSel == null) return; // cancelado
 
-
+    if (tarifaSel == null) return;
 
     Ticket t = new Ticket();
     t.setPlacaVehiculo(placa);
@@ -948,12 +946,10 @@ public class Parqueos extends javax.swing.JDialog {
     t.setCodigoArea(spot.getCodigodearea());
     t.setFechaHoraIngreso(LocalDateTime.now());
 
-
-    // ---------- PASO 2: TARIFA PLANA ----------
+    // PLANA
     if (tarifaSel.equals("Tarifa Plana")) {
 
-        // método de pago
-        String[] metodos = {"Efectivo", "Tarjeta", "Transferencia"};
+        String[] metodos = {"EFECTIVO", "TARJETA", "TRANSFERENCIA"};
         String metodoPago = (String) JOptionPane.showInputDialog(
                 this,
                 "Seleccione método de pago:",
@@ -965,37 +961,32 @@ public class Parqueos extends javax.swing.JDialog {
         );
         if (metodoPago == null) return;
 
-        double montoFijo = 15.00;
-
         t.setTarifaAplicada("PLANA");
-        t.setMonto(montoFijo);
+        t.setMonto(ConfigTarifas.getTarifaPlana());
         t.setMetodoPago(metodoPago);
         t.setEstado("ACTIVO");
-
-    } 
-    // ---------- PASO 3: TARIFA VARIABLE ----------
-    else if (tarifaSel.equals("Tarifa Variable")) {
-
+    }
+    else {
         t.setTarifaAplicada("VARIABLE");
         t.setMonto(0);
         t.setMetodoPago("PENDIENTE");
         t.setEstado("PENDIENTE");
     }
 
-
-
-    // ---------- PASO 4: GUARDAR EN BD ----------
+    // GUARDAR
     TicketDAO dao = new TicketDAO();
-    boolean ok = dao.insertarTicketYMarcarSpot(t, spot.getCodigo());
+    int idGenerado = dao.insertarTicketYMarcarSpot(t, spot.getCodigo());
 
-    if (!ok) {
-        JOptionPane.showMessageDialog(this, "Error al registrar la entrada.", "Error", JOptionPane.ERROR_MESSAGE);
+    t.setId(idGenerado);
+
+    if (idGenerado == -1) {
+        JOptionPane.showMessageDialog(this, "Error al registrar entrada.");
         return;
-    }  
-    
+    }
+
+    // RESUMEN
     String resumen =
-        "Ticket registrado\n\n" +
-        "Ticket: " + t.getId() + "\n" +
+        "Ticket No: " + t.getId() + "\n\n" +
         "Placa: " + t.getPlacaVehiculo() + "\n" +
         "Carnet: " + t.getCarnetUsuario() + "\n" +
         "Usuario: " + t.getTipoUsuario() + "\n" +
@@ -1006,11 +997,10 @@ public class Parqueos extends javax.swing.JDialog {
         "Monto: Q" + t.getMonto() + "\n" +
         "Método Pago: " + t.getMetodoPago() + "\n" +
         "Estado: " + t.getEstado() + "\n" +
-        "Hora Ingreso: " + t.getFechaHoraIngreso().toString();
+        "Ingreso: " + t.getFechaHoraIngreso();
 
-    JOptionPane.showMessageDialog(this, resumen, "Ticket Generado", JOptionPane.INFORMATION_MESSAGE);
-    this.dispose();
-        
+    JOptionPane.showMessageDialog(this, resumen, "Entrada Registrada", JOptionPane.INFORMATION_MESSAGE);
+    dispose();
     }//GEN-LAST:event_btnParquearActionPerformed
 
     /**

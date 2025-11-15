@@ -10,19 +10,20 @@ import java.sql.Timestamp;
 
 public class TicketDAO {
     
-    public boolean insertarTicketYMarcarSpot(Ticket t, String codigoSpot) {
-
+    public int insertarTicketYMarcarSpot(Ticket t, String codigoSpot) {
         String sqlTicket = "INSERT INTO ticket (placaVehiculo, carnetUsuario, tipoUsuario, tipoVehiculo, "
                 + "codigoSpot, codigoArea, fechaHoraIngreso, tarifaAplicada, monto, metodoPago, estado) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        String sqlSpot = "UPDATE spot SET estado = 1 WHERE codigo = ?"; // 1 = ocupado
+        String sqlSpot = "UPDATE spot SET estado = 1 WHERE codigo = ?";
 
         try (Connection conn = Conexion.Conectar()) {
 
-            conn.setAutoCommit(false); // ← INICIO TRANSACCIÓN
+            conn.setAutoCommit(false);
 
-            // 1) INSERTAR TICKET Y OBTENER ID GENERADO
+            int generatedId = -1;
+
+            // INSERT TICKET
             try (PreparedStatement ps = conn.prepareStatement(sqlTicket, Statement.RETURN_GENERATED_KEYS)) {
 
                 ps.setString(1, t.getPlacaVehiculo());
@@ -39,26 +40,23 @@ public class TicketDAO {
 
                 ps.executeUpdate();
 
-                // Obtener ID generado
-                try (ResultSet rs = ps.getGeneratedKeys()) {
-                    if (rs.next()) {
-                        t.setId(rs.getInt(1));  // ✔ Asignar al ticket
-                    }
+                ResultSet rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    generatedId = rs.getInt(1);
                 }
             }
 
-            // 2) MARCAR SPOT COMO OCUPADO
+            // MARCAR SPOT
             try (PreparedStatement ps2 = conn.prepareStatement(sqlSpot)) {
                 ps2.setString(1, codigoSpot);
                 ps2.executeUpdate();
             }
 
-            conn.commit();  // ← TODO OK
-            return true;
+            conn.commit();
+            return generatedId;
 
         } catch (SQLException e) {
-            System.err.println("ERROR insertarTicketYMarcarSpot(): " + e.getMessage());
-            return false;
+            return -1;
         }
     }
     
@@ -97,39 +95,31 @@ public class TicketDAO {
         return null;
     }
     
-    public boolean actualizarTicketSalida(Ticket t) {
+    public boolean actualizarTicketYLiberarSpot(Ticket t) {
+        String sqlUpdate = "UPDATE ticket SET fechaHoraSalida=?, monto=?, metodoPago=?, estado=? WHERE id=?";
+        String sqlSpot = "UPDATE spot SET estado = 0 WHERE codigo=?";
 
-        String sqlTicket = "UPDATE ticket SET fechaHoraSalida=?, monto=?, metodoPago=?, estado=? WHERE id=?";
-
-        String sqlLiberarSpot = "UPDATE spot SET estado = 0 WHERE codigo = ?";  
-
-        try (Connection conn = Conexion.Conectar()) {
-
-            conn.setAutoCommit(false); // INICIO TRANSACCIÓN
+        try (Connection con = Conexion.Conectar()) {
 
             // 1. actualizar ticket
-            try (PreparedStatement ps = conn.prepareStatement(sqlTicket)) {
-                ps.setTimestamp(1, Timestamp.valueOf(t.getFechaHoraSalida()));
-                ps.setDouble(2, t.getMonto());
-                ps.setString(3, t.getMetodoPago());
-                ps.setString(4, t.getEstado());
-                ps.setInt(5, t.getId());
-                ps.executeUpdate();
-            }
+            PreparedStatement ps1 = con.prepareStatement(sqlUpdate);
+            ps1.setTimestamp(1, Timestamp.valueOf(t.getFechaHoraSalida()));
+            ps1.setDouble(2, t.getMonto());
+            ps1.setString(3, t.getMetodoPago());
+            ps1.setString(4, "COMPLETADO");
+            ps1.setInt(5, t.getId());
+            ps1.executeUpdate();
 
-            // 2. liberar el spot
-            try (PreparedStatement ps2 = conn.prepareStatement(sqlLiberarSpot)) {
-                ps2.setString(1, t.getCodigoSpot()); // ← ya deberías tenerlo en el Ticket
-                ps2.executeUpdate();
-            }
-
-            conn.commit(); // TODO OK
+            // 2. liberar spot
+            PreparedStatement ps2 = con.prepareStatement(sqlSpot);
+            ps2.setString(1, t.getCodigoSpot());
+            ps2.executeUpdate();
 
             return true;
 
-        } catch (SQLException e) {
-            System.err.println("ERROR completarSalida(): " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
-    }    
+    }   
 }
