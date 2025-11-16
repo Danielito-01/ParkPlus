@@ -13,7 +13,6 @@ import DAO.VehiculoDAO;
 import Gestiones.Gestion;
 import com.mycompany.parkplus.PantallaPark;
 import java.util.ArrayList;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
