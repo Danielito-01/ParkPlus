@@ -1,147 +1,102 @@
-﻿# 📚 ParkPlus: Guía de Instrucciones Operacionales
+﻿## I. Instalación y configuración
 
-Este documento proporciona las instrucciones paso a paso para operar el sistema de gestión de parqueos **ParkPlus**, basadas en los flujos de trabajo presentados en la documentación del proyecto.
+### 1. Requisitos previos
 
-## 🚀 I. Instrucciones de Instalación y Configuración (Setup)
+Para ejecutar ParkPlus necesita:
 
-_(**NOTA IMPORTANTE:** Los comandos y requisitos técnicos específicos dependen del entorno de desarrollo. Los siguientes puntos deben ser completados por el desarrollador del sistema.)_
+* Java Development Kit 24.
+* Apache Maven.
+* Microsoft SQL Server.
+* SQL Server Management Studio.
+* Apache NetBeans, recomendado.
+* Git.
 
-### 1. Requisitos Previos
+### 2. Clonar el repositorio
 
--   Asegúrese de tener instalado [Base de Datos Requerida, ej. SQL Server].
-    
--   Asegúrese de tener el entorno de ejecución [Lenguaje de Programación, ej. Java, Python] configurado.
-    
+Ejecute:
 
-### 2. Puesta en Marcha (Placeholder)
+```bash
+git clone https://github.com/Danielito-01/ParkPlus.git
+```
 
-1.  Clonar el repositorio: `git clone https://aws.amazon.com/es/what-is/repo/`
-    
-2.  Instalar dependencias: `[Comando de instalación]`
-    
-3.  Configurar la base de datos: `[Pasos para conexión]`
-    
-4.  Iniciar el servicio: `[Comando de inicio]`
-    
+Ingrese a la carpeta del proyecto:
 
-----------
+```bash
+cd ParkPlus
+```
 
-## 🚦 II. Instrucciones Operacionales (Uso del Sistema)
+### 3. Configurar la base de datos
 
-### 1. Gestión de Datos Maestros (Menú)
+1. Abra Microsoft SQL Server Management Studio.
+2. Inicie sesión con un usuario administrador.
+3. Abra el archivo:
 
-El módulo **Menu** permite configurar las bases de datos iniciales del sistema.
+```text
+docs/ParkPlus.sql
+```
 
-#### **Instrucción 1.1: Registrar Nuevos Usuarios (Menu > Nuevo Usuario)**
+4. Ejecute el script completo.
 
-1.  Navegue a **Menu** y seleccione **Nuevo Usuario**.
-    
-2.  Complete la información personal: **Carnet** (obligatorio, ej. `C0001011`), **Nombre**, **Apellido**, **Teléfono**.
-    
-3.  Seleccione el **Tipo** de usuario: **DOCENTE** o **ESTUDIANTE**.
-    
-4.  En la sección **Vehículos a agregar**, ingrese los datos del vehículo:
-    
-    -   **Placa** (ej. `MOT005`), **Color**, **Tipo** (**Moto** o **Carro**).
-        
-    -   Defina el **Rol** del vehículo para ese usuario (**PROPIETARIO** o **TERCERO**).
-        
-5.  Haga clic en **Agregar** para incluir el vehículo en la lista temporal.
-    
-6.  Haga clic en **Guardar** para finalizar el registro del usuario y sus vehículos.
-    
+El script crea o reconstruye la base de datos `ParkPlus` con sus tablas, relaciones, restricciones y triggers.
 
-#### **Instrucción 1.2: Consultar Áreas y Spots (Informacion > Áreas y Spots)**
+> Advertencia: el script puede borrar las tablas y los datos existentes de `ParkPlus`. No debe ejecutarse si existen datos que necesite conservar.
 
-1.  Navegue a **Informacion** y seleccione **Áreas y Spots**.
-    
-2.  Utilice las pestañas para verificar las **Áreas** configuradas (ej. `ABCM` para **MOTOS**) y los **Spots** individuales disponibles (ej. `ABCM33`).
-   
-   **1.1 y 1.2** puede omitirlos si carga los archivos txt ya incluidos. 
+### 4. Configurar la conexión
 
-### 2. Proceso de Ingreso y Parqueo (Parquear)
+La aplicación se conecta a SQL Server mediante JDBC utilizando:
 
-Este es el flujo principal para dar **Entrada** a un vehículo.
+```text
+Servidor: localhost
+Puerto: 1433
+Base de datos: ParkPlus
+```
 
-#### **Instrucción 2.1: Registrar la Entrada de un Usuario Registrado**
+Las credenciales de SQL Server deben configurarse mediante variables de entorno:
 
-1.  Acceda a la pestaña **Parquear**.
-    
-2.  Asegúrese de que la casilla **Invitado** esté **desmarcada**.
-    
-3.  Ingrese el **Carnet** del usuario.
-    
-4.  Seleccione la **Placa** del vehículo que ingresa.
-    
-5.  Haga clic en el botón **Entrada**.
-    
-6.  **Asignación de Spot:**
-    
-    -   Visualice el mapa del parqueo.
-        
-    -   Seleccione un Spot **Libre** (Generalmente indicado en color **Verde**) compatible con el tipo de vehículo (Carro/Moto).
-        
-7.  **Selección de Tarifa:** Se le solicitará elegir la tarifa aplicable: **Tarifa Variable** o **Tarifa Plana**.
-    
-8.  El sistema generará el **Ticket No** (ej. **29**) con **Estado: PENDIENTE** y **Monto: Q0.0**.
-    
+```text
+PARKPLUS_DB_USER
+PARKPLUS_DB_PASSWORD
+```
 
-#### **Instrucción 2.2: Registrar la Entrada de un Invitado**
+No publique contraseñas dentro del repositorio.
 
-1.  Acceda a la pestaña **Parquear** y **marque** la casilla **Invitado**.
-    
-2.  Ingrese el **Nombre** del invitado y la **Placa** del vehículo.
-    
-3.  Siga los pasos 5 a 8 de la Instrucción 2.1. (Nota: Los invitados suelen tener **Tarifa Plana** que puede ser pagada de inmediato, dejando el **Estado: ACTIVO** y **Monto: Q15.0**).
-    
+### 5. Cargar áreas y spots
 
-### 3. Proceso de Egreso y Pago (Salida)
+Después de crear la base de datos, ejecute ParkPlus y abra el módulo para cargar archivos.
 
-Este es el flujo principal para dar **Salida** a un vehículo y cerrar el ticket.
+Cargue los archivos en este orden:
 
-#### **Instrucción 3.1: Procesar Salida y Pago (Tarifa Variable)**
+1. `areas.txt`
+2. `spots.txt`
 
-1.  Acceda a la pestaña **Salida**.
-    
-2.  Ingrese el número de **Ticket** (ej. **29**) o la **Placa** del vehículo.
-    
-3.  Haga clic en el botón **Salida**.
-    
-4.  El sistema calculará el **Monto a pagar** (ej. Q15.0).
-    
-5.  Seleccione el **Método de Pago** (**EFECTIVO** o **TARJETA**).
-    
-6.  Confirme el pago. El sistema mostrará un mensaje de **Salida Procesada** y el ticket pasará a **Estado: FINALIZADO**.
-    
+Las áreas deben cargarse primero porque cada spot necesita estar asociado a un área existente.
 
-#### **Instrucción 3.2: Procesar Salida (Tarifa Plana Pagada Previamente)**
+La configuración inicial contiene:
 
-1.  Acceda a la pestaña **Salida** e ingrese el **Ticket No** (ej. **30**).
-    
-2.  Haga clic en **Salida**.
-    
-3.  El sistema preguntará: **"El usuario ya pagó la tarifa plana. ¿Desea cerrar el ticket y liberar el spot?"**
-    
-4.  Confirme la operación para liberar el espacio.
-    
+| Área        | Capacidad | Vehículo |
+| ----------- | --------: | -------- |
+| Estudiantes |        20 | Carro    |
+| Docentes    |        12 | Carro    |
+| Motos       |        30 | Moto     |
 
-### 4. Generación de Reportes (Reportes)
+En total se crean 62 spots.
 
-Los reportes son esenciales para la auditoría y control financiero.
+### 6. Compilar el proyecto
 
-#### **Instrucción 4.1: Generar el Reporte de Cierre del Día**
+Desde la carpeta principal del proyecto ejecute:
 
-1.  Navegue a **Reportes** y seleccione la opción **Cierre**.
-    
-2.  Seleccione la fecha deseada.
-    
-3.  El sistema generará el informe detallado de las transacciones finalizadas, incluyendo: **PLACA**, **TARIFA**, **MONTO**, y **MÉTODO** de pago utilizado.
-    
+```bash
+mvn clean package
+```
 
-#### **Instrucción 4.2: Consultar el Histórico de Transacciones**
+También puede utilizar NetBeans:
 
-1.  Navegue a **Reportes** y seleccione la opción **Histórico**.
-    
-2.  Defina el rango de fechas de consulta utilizando los campos **DESDE** y **HASTA**.
-    
-3.  Haga clic en **Consultar**.
+1. Abra Apache NetBeans.
+2. Seleccione **File > Open Project**.
+3. Abra la carpeta `ParkPlus`.
+4. Espere a que Maven descargue las dependencias.
+5. Ejecute la clase principal:
+
+```text
+com.mycompany.parkplus.ParkPlus
+```

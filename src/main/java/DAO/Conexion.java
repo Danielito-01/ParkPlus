@@ -12,18 +12,38 @@ public final class Conexion {
             + "encrypt=true;"
             + "trustServerCertificate=true;";
 
-    private static final String USUARIO = "danipark";
-    private static final String CONTRA = "ParkPlus?0101_";
+    private static final String USUARIO =
+            obtenerVariableEntorno("PARKPLUS_DB_USER");
+
+    private static final String CONTRA =
+            obtenerVariableEntorno("PARKPLUS_DB_PASSWORD");
 
     private Conexion() {
     }
 
+    private static String obtenerVariableEntorno(String nombre) {
+        String valor = System.getenv(nombre);
+
+        if (valor == null || valor.isBlank()) {
+            throw new IllegalStateException(
+                    "Falta configurar la variable de entorno: " + nombre
+            );
+        }
+
+        return valor;
+    }
+
     public static Connection Conectar() {
         try {
-            return DriverManager.getConnection(URL, USUARIO, CONTRA);
+            return DriverManager.getConnection(
+                    URL,
+                    USUARIO,
+                    CONTRA
+            );
         } catch (SQLException e) {
             throw new IllegalStateException(
-                    "No se pudo conectar con ParkPlus: " + e.getMessage(),
+                    "No se pudo conectar con ParkPlus: "
+                    + e.getMessage(),
                     e
             );
         }
