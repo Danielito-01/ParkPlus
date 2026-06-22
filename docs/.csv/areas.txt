@@ -1,0 +1,3 @@
+ABCE|Estudiantes|20|Carro
+ABCD|Docentes|12|Carro
+ABCM|Motos|30|Moto

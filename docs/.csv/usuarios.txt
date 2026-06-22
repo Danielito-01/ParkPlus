@@ -1,0 +1,30 @@
+C0001001|55241234|María|Gómez|Estudiante|Ingeniería Civil|4
+C0001002|56123478|Juan|Pérez|Docente
+C0001003|57890123|Ana|Lopez|Estudiante|Administración|6
+C0001004|59321234|Carlos|Méndez|Estudiante|Medicina|3
+C0001005|50456789|Sofía|Ramírez|Docente
+C0001006|57789012|Luis|Hernández|Estudiante|Derecho|7
+C0001007|52233455|Gabriela|Ortiz|Estudiante|Arquitectura|2
+C0001008|59876543|Pedro|Vargas|Docente
+C0001009|53322110|Elena|Castillo|Estudiante|Psicología|5
+C0001010|56677888|Miguel|Ruiz|Estudiante|Ingeniería Eléctrica|8
+C0001011|55990011|Lucía|Flores|Docente
+C0001012|54455667|Ricardo|Santos|Estudiante|Sistemas|2
+C0001013|57223344|Paola|Cruz|Estudiante|Comunicación|1
+C0001014|58001234|Andrés|Gómez|Docente
+C0001015|55112233|Jazmín|Molina|Estudiante|Biología|6
+C0001016|59556677|Roberto|Navarro|Estudiante|Ingeniería Mecánica|9
+C0001017|56334455|Camila|Pineda|Docente
+C0001018|57004567|Fernando|Rojas|Estudiante|Economía|3
+C0001019|58229900|Natalia|Soto|Estudiante|Química|5
+C0001020|50778866|Diego|López|Docente
+C0001021|57991122|Marcos|Vázquez|Estudiante|Sistemas|4
+C0001022|58663344|Adriana|Mendoza|Estudiante|Arquitectura|7
+C0001023|55223344|Óscar|Pacheco|Docente
+C0001024|59112233|Verónica|Salazar|Estudiante|Administración|2
+C0001025|56554433|Hugo|Alvarado|Estudiante|Derecho|8
+C0001026|57669988|Marta|Urrutia|Docente
+C0001027|58331122|Iván|Córdoba|Estudiante|Ingeniería Civil|1
+C0001028|54998877|Rocío|Mayén|Estudiante|Psicología|3
+C0001029|59443322|Pablo|Estrada|Docente
+C0001030|50887766|Clara|Benítez|Estudiante|Comunicación|4
