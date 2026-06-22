@@ -1,1 +1,30 @@
-/target/
+# Maven
+target/
+*.class
+
+# Variables y credenciales locales
+.env
+.env.*
+*.properties.local
+
+# NetBeans
+nbproject/private/
+build/
+dist/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
