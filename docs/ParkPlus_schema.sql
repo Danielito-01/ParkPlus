@@ -1,6 +1,5 @@
 /*
     ParkPlus - esquema completo para Microsoft SQL Server
-    Archivo recomendado para el repositorio: database/ParkPlus_schema.sql
 
     OBJETIVO
     - Crear la base de datos ParkPlus si todavía no existe.
@@ -11,10 +10,6 @@
     - Este script es DESTRUCTIVO para las tablas de ParkPlus.
     - Si las tablas ya existen, se eliminan junto con sus datos y se crean de nuevo.
     - No contiene usuarios, contraseñas ni rutas físicas de archivos MDF/LDF.
-
-    ORDEN RECOMENDADO DESPUÉS DE EJECUTARLO
-    1. Cargar areas.txt.
-    2. Cargar spots_corregidos.txt.
 */
 
 USE [master];

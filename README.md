@@ -65,7 +65,7 @@ cd ParkPlus
 3. Abra el archivo:
 
 ```text
-docs/ParkPlus.sql
+docs/ParkPlus_schema.sql
 ```
 
 4. Ejecute el script completo.
@@ -336,8 +336,8 @@ ParkPlus/
 │   │   ├── relacion uv.txt
 │   │   └── historico.txt
 │   ├── Manual_tecnico.md
-│   ├── Manuel_de_usuario.md
-│   └── ParkPlus.sql
+│   ├── Manual_de_usuario.md
+│   └── ParkPlus_schema.sql
 ├── src/
 │   └── main/
 ├── .gitignore
