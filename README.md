@@ -349,7 +349,7 @@ ParkPlus/
 
 * [Manual técnico](docs/Manual_tecnico.md)
 * [Manual de usuario](docs/Manual_de_usuario.md)
-* [Script de base de datos](docs/ParkPlus.sql)
+* [Script de base de datos](docs/ParkPlus_schema.sql)
 
 ## Seguridad
 
